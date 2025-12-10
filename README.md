@@ -46,7 +46,7 @@ const bestProxy = proxies
 	.query()
 	.where((e) => e.data.country === 'US')
 	.where((e) => e.meta.active === true)
-	.sortBy('speed', 'desc')
+	.orderBy('speed', 'desc')
 	.select(Selectors.first);
 
 console.log(bestProxy); // { ip: '1.1.1.1', country: 'US', speed: 100 }
@@ -169,8 +169,8 @@ const result = pool
 	.query()
 	.where((e) => e.data.country === 'US')
 	.where((e) => e.meta.active === true)
-	.sortBy('speed', 'desc')
-	.sortByMeta('usedCount', 'asc')
+	.orderBy('speed', 'desc')
+	.orderByMeta('usedCount', 'asc')
 	.limit(10)
 	.toArray();
 
@@ -314,9 +314,9 @@ query.where((e) => e.data.country === 'US');
 query.whereOr([(e) => e.data.provider === 'A', (e) => e.data.provider === 'B']);
 
 // Sorting (chainable)
-query.sortBy('speed', 'desc');
-query.sortBy((a, b) => a.data.speed - b.data.speed);
-query.sortByMeta('usedCount', 'asc');
+query.orderBy('speed', 'desc');
+query.orderBy((a, b) => a.data.speed - b.data.speed);
+query.orderByMeta('usedCount', 'asc');
 
 // Pagination
 query.offset(20).limit(10);
@@ -453,7 +453,7 @@ const proxy = proxies
 	.query()
 	.where((e) => e.data.country === 'US')
 	.where((e) => e.meta.active)
-	.sortByMeta('usedCount', 'asc')
+	.orderByMeta('usedCount', 'asc')
 	.select(Selectors.first);
 ```
 

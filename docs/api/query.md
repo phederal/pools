@@ -8,6 +8,7 @@ Create a query using `pool.query()`, then chain methods to build your query.
 
 ::: tip Destructuring Option
 You can use destructuring for shorter syntax. Both ways are valid:
+
 ```typescript
 // With destructuring (shorter)
 .where(({ data, meta }) => data.country === 'US' && meta.active)
@@ -15,6 +16,7 @@ You can use destructuring for shorter syntax. Both ways are valid:
 // Without destructuring (also fine)
 .where(e => e.data.country === 'US' && e.meta.active)
 ```
+
 :::
 
 ## Filtering
@@ -28,13 +30,14 @@ query.where(filter: Filter<T>): Query<T>
 ```
 
 **Example:**
+
 ```typescript
 // Using destructuring for cleaner syntax
 const result = pool
-  .query()
-  .where(({ data }) => data.country === 'US')
-  .where(({ meta }) => meta.active === true)
-  .toArray();
+	.query()
+	.where(({ data }) => data.country === 'US')
+	.where(({ meta }) => meta.active === true)
+	.toArray();
 ```
 
 ### whereOr()
@@ -46,47 +49,47 @@ query.whereOr(filters: Filter<T>[]): Query<T>
 ```
 
 **Example:**
+
 ```typescript
 const result = pool
-  .query()
-  .whereOr([
-    ({ data }) => data.provider === 'A',
-    ({ data }) => data.provider === 'B'
-  ])
-  .toArray();
+	.query()
+	.whereOr([({ data }) => data.provider === 'A', ({ data }) => data.provider === 'B'])
+	.toArray();
 ```
 
 ## Sorting
 
-### sortBy()
+### orderBy()
 
 Sorts by a field or custom comparator.
 
 ```typescript
-query.sortBy(field: keyof T, order: 'asc' | 'desc'): Query<T>
-query.sortBy(compareFn: (a: PoolEntry<T>, b: PoolEntry<T>) => number): Query<T>
+query.orderBy(field: keyof T, order: 'asc' | 'desc'): Query<T>
+query.orderBy(compareFn: (a: PoolEntry<T>, b: PoolEntry<T>) => number): Query<T>
 ```
 
 **Examples:**
+
 ```typescript
 // By field
-pool.query().sortBy('speed', 'desc');
+pool.query().orderBy('speed', 'desc');
 
 // Custom comparator
-pool.query().sortBy((a, b) => b.data.speed - a.data.speed);
+pool.query().orderBy((a, b) => b.data.speed - a.data.speed);
 ```
 
-### sortByMeta()
+### orderByMeta()
 
 Sorts by a metadata field.
 
 ```typescript
-query.sortByMeta(field: string, order: 'asc' | 'desc'): Query<T>
+query.orderByMeta(field: string, order: 'asc' | 'desc'): Query<T>
 ```
 
 **Example:**
+
 ```typescript
-pool.query().sortByMeta('usedCount', 'asc');
+pool.query().orderByMeta('usedCount', 'asc');
 ```
 
 ## Pagination
@@ -100,6 +103,7 @@ query.limit(count: number): Query<T>
 ```
 
 **Example:**
+
 ```typescript
 pool.query().limit(10).toArray(); // Get first 10
 ```
@@ -113,6 +117,7 @@ query.offset(count: number): Query<T>
 ```
 
 **Example:**
+
 ```typescript
 pool.query().offset(20).limit(10).toArray(); // Get 10 items starting from 20
 ```
@@ -128,13 +133,14 @@ query.select(selector: Selector<T>): T | null
 ```
 
 **Example:**
+
 ```typescript
 import { Selectors } from 'pools';
 
 const proxy = pool
-  .query()
-  .where(({ data }) => data.country === 'US')
-  .select(Selectors.random);
+	.query()
+	.where(({ data }) => data.country === 'US')
+	.select(Selectors.random);
 ```
 
 ### toArray()
@@ -146,12 +152,13 @@ query.toArray(): T[]
 ```
 
 **Example:**
+
 ```typescript
 const users = pool
-  .query()
-  .where(({ data }) => data.active)
-  .sortBy('name', 'asc')
-  .toArray();
+	.query()
+	.where(({ data }) => data.active)
+	.orderBy('name', 'asc')
+	.toArray();
 ```
 
 ### toPool()
@@ -163,11 +170,12 @@ query.toPool(): Pool<T>
 ```
 
 **Example:**
+
 ```typescript
 const activeUsers = pool
-  .query()
-  .where(({ data }) => data.active)
-  .toPool();
+	.query()
+	.where(({ data }) => data.active)
+	.toPool();
 ```
 
 ### count
@@ -179,35 +187,30 @@ query.count: number
 ```
 
 **Example:**
+
 ```typescript
-const activeCount = pool
-  .query()
-  .where(({ data }) => data.active)
-  .count;
+const activeCount = pool.query().where(({ data }) => data.active).count;
 ```
 
 ## Chaining Example
 
 ```typescript
 const result = pool
-  .query()
-  // Filter by country
-  .where(({ data }) => data.country === 'US')
-  // Filter by active status
-  .where(({ meta }) => meta.active === true)
-  // Allow multiple providers
-  .whereOr([
-    ({ data }) => data.provider === 'A',
-    ({ data }) => data.provider === 'B'
-  ])
-  // Sort by speed (descending)
-  .sortBy('speed', 'desc')
-  // Sort by usage (ascending)
-  .sortByMeta('usedCount', 'asc')
-  // Skip first 10
-  .offset(10)
-  // Take next 5
-  .limit(5)
-  // Get as array
-  .toArray();
+	.query()
+	// Filter by country
+	.where(({ data }) => data.country === 'US')
+	// Filter by active status
+	.where(({ meta }) => meta.active === true)
+	// Allow multiple providers
+	.whereOr([({ data }) => data.provider === 'A', ({ data }) => data.provider === 'B'])
+	// Sort by speed (descending)
+	.orderBy('speed', 'desc')
+	// Sort by usage (ascending)
+	.orderByMeta('usedCount', 'asc')
+	// Skip first 10
+	.offset(10)
+	// Take next 5
+	.limit(5)
+	// Get as array
+	.toArray();
 ```

@@ -44,7 +44,7 @@ const bestProxy = proxies
 	.query()
 	.where(({ data }) => data.country === 'US')
 	.where(({ meta }) => meta.active === true)
-	.sortBy('speed', 'desc')
+	.orderBy('speed', 'desc')
 	.select(Selectors.first);
 
 console.log(bestProxy); // { ip: '1.1.1.1', country: 'US', speed: 100 }

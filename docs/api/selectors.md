@@ -21,6 +21,7 @@ Selectors.first<T>(entries: PoolEntry<T>[]): PoolEntry<T> | null
 ```
 
 **Example:**
+
 ```typescript
 const first = pool.query().select(Selectors.first);
 ```
@@ -34,6 +35,7 @@ Selectors.last<T>(entries: PoolEntry<T>[]): PoolEntry<T> | null
 ```
 
 **Example:**
+
 ```typescript
 const last = pool.query().select(Selectors.last);
 ```
@@ -47,6 +49,7 @@ Selectors.random<T>(entries: PoolEntry<T>[]): PoolEntry<T> | null
 ```
 
 **Example:**
+
 ```typescript
 const random = pool.query().select(Selectors.random);
 ```
@@ -62,16 +65,13 @@ Selectors.minBy<T>(field: string): Selector<T>
 Checks both `data` and `meta` for the field (prefers `data`).
 
 **Examples:**
+
 ```typescript
 // Minimum by data field
-const leastUsed = pool
-  .query()
-  .select(Selectors.minBy('usedCount'));
+const leastUsed = pool.query().select(Selectors.minBy('usedCount'));
 
 // Minimum by meta field
-const lowestPriority = pool
-  .query()
-  .select(Selectors.minBy('priority'));
+const lowestPriority = pool.query().select(Selectors.minBy('priority'));
 ```
 
 ### weighted()
@@ -85,25 +85,22 @@ Selectors.weighted<T>(weightFn: (entry: PoolEntry<T>) => number): Selector<T>
 Higher weight = higher probability of selection.
 
 **Examples:**
+
 ```typescript
 // Prefer less-used entries
-const proxy = pool
-  .query()
-  .select(Selectors.weighted(e => 1 / (e.meta.usedCount + 1)));
+const proxy = pool.query().select(Selectors.weighted((e) => 1 / (e.meta.usedCount + 1)));
 
 // Prefer higher-speed entries
-const proxy = pool
-  .query()
-  .select(Selectors.weighted(({ data }) => data.speed));
+const proxy = pool.query().select(Selectors.weighted(({ data }) => data.speed));
 
 // Custom weight function
-const proxy = pool
-  .query()
-  .select(Selectors.weighted(e => {
-    const speed = e.data.speed;
-    const usage = e.meta.usedCount;
-    return speed / (usage + 1);
-  }));
+const proxy = pool.query().select(
+	Selectors.weighted((e) => {
+		const speed = e.data.speed;
+		const usage = e.meta.usedCount;
+		return speed / (usage + 1);
+	})
+);
 ```
 
 ::: tip Zero Weights
@@ -119,13 +116,11 @@ import type { Selector, PoolEntry } from 'pools';
 
 // Select entry with longest name
 const longestName: Selector<User> = (entries) => {
-  if (entries.length === 0) return null;
+	if (entries.length === 0) return null;
 
-  return entries.reduce((longest, entry) => {
-    return entry.data.name.length > longest.data.name.length
-      ? entry
-      : longest;
-  });
+	return entries.reduce((longest, entry) => {
+		return entry.data.name.length > longest.data.name.length ? entry : longest;
+	});
 };
 
 // Use it
@@ -141,24 +136,26 @@ import { Selectors } from 'pools';
 
 // Random US proxy
 const proxy = pool
-  .query()
-  .where(({ data }) => data.country === 'US')
-  .select(Selectors.random);
+	.query()
+	.where(({ data }) => data.country === 'US')
+	.select(Selectors.random);
 
 // Least-used active proxy
 const proxy = pool
-  .query()
-  .where(({ meta }) => meta.active === true)
-  .sortBy('speed', 'desc')
-  .select(Selectors.minBy('usedCount'));
+	.query()
+	.where(({ meta }) => meta.active === true)
+	.orderBy('speed', 'desc')
+	.select(Selectors.minBy('usedCount'));
 
 // Weighted selection based on speed and usage
 const proxy = pool
-  .query()
-  .where(({ data }) => data.country === 'US')
-  .select(Selectors.weighted(e => {
-    return e.data.speed / (e.meta.usedCount + 1);
-  }));
+	.query()
+	.where(({ data }) => data.country === 'US')
+	.select(
+		Selectors.weighted((e) => {
+			return e.data.speed / (e.meta.usedCount + 1);
+		})
+	);
 ```
 
 ## Selector Patterns
@@ -168,9 +165,9 @@ const proxy = pool
 ```typescript
 // Select least-used server
 const server = servers
-  .query()
-  .where(({ meta }) => meta.healthy)
-  .select(Selectors.minBy('activeConnections'));
+	.query()
+	.where(({ meta }) => meta.healthy)
+	.select(Selectors.minBy('activeConnections'));
 ```
 
 ### Failover
@@ -178,15 +175,15 @@ const server = servers
 ```typescript
 // Try primary, fallback to secondary
 let server = servers
-  .query()
-  .where(({ data }) => data.type === 'primary')
-  .select(Selectors.first);
+	.query()
+	.where(({ data }) => data.type === 'primary')
+	.select(Selectors.first);
 
 if (!server) {
-  server = servers
-    .query()
-    .where(({ data }) => data.type === 'secondary')
-    .select(Selectors.random);
+	server = servers
+		.query()
+		.where(({ data }) => data.type === 'secondary')
+		.select(Selectors.random);
 }
 ```
 
@@ -195,9 +192,9 @@ if (!server) {
 ```typescript
 // Distribute based on server capacity
 const server = servers
-  .query()
-  .where(({ meta }) => meta.available)
-  .select(Selectors.weighted(({ data }) => data.capacity));
+	.query()
+	.where(({ meta }) => meta.available)
+	.select(Selectors.weighted(({ data }) => data.capacity));
 ```
 
 ### Round-Robin (with metadata)
@@ -205,11 +202,9 @@ const server = servers
 ```typescript
 // Track last selected index
 pool.on('get', (entry) => {
-  entry.meta.lastSelectedAt = Date.now();
+	entry.meta.lastSelectedAt = Date.now();
 });
 
 // Select least recently used
-const item = pool
-  .query()
-  .select(Selectors.minBy('lastSelectedAt'));
+const item = pool.query().select(Selectors.minBy('lastSelectedAt'));
 ```

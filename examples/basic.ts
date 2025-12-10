@@ -28,10 +28,7 @@ const usProxy = proxies
 console.log('First US proxy:', usProxy);
 
 // Query with sorting
-const fastestProxy = proxies
-	.query()
-	.sortBy('speed', 'desc')
-	.select(Selectors.first);
+const fastestProxy = proxies.query().orderBy('speed', 'desc').select(Selectors.first);
 
 console.log('Fastest proxy:', fastestProxy);
 
@@ -40,7 +37,7 @@ const bestUsProxy = proxies
 	.query()
 	.where((e) => e.data.country === 'US')
 	.where((e) => e.meta.usedCount < 5)
-	.sortBy('speed', 'desc')
+	.orderBy('speed', 'desc')
 	.select(Selectors.first);
 
 console.log('Best US proxy (low usage, high speed):', bestUsProxy);
@@ -100,7 +97,10 @@ pool2.add({ ip: '4.4.4.4', country: 'DE', speed: 300 });
 
 const merged = Pool.mergeUnique([pool1, pool2], 'ip');
 console.log(`Merged unique proxies: ${merged.size}`);
-console.log('IPs:', merged.all.map((p) => p.ip));
+console.log(
+	'IPs:',
+	merged.all.map((p) => p.ip)
+);
 
 // Pool of pools example
 console.log('\n=== Pool of Pools Example ===\n');
@@ -129,12 +129,15 @@ console.log(`Total pools: ${poolOfPools.size}`);
 // Find the biggest pool
 const biggestPool = poolOfPools
 	.query()
-	.sortBy((a, b) => b.data.size - a.data.size)
+	.orderBy((a, b) => b.data.size - a.data.size)
 	.select(Selectors.first);
 
 if (biggestPool) {
 	console.log(`Biggest pool has ${biggestPool.size} proxies`);
-	console.log('Countries:', biggestPool.all.map((p) => p.country));
+	console.log(
+		'Countries:',
+		biggestPool.all.map((p) => p.country)
+	);
 }
 
 // Find pools in Europe with more than 1 proxy

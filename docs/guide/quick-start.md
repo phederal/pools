@@ -87,7 +87,7 @@ const result = users
 	// Filter by active status
 	.where(({ meta }) => meta.active === true)
 	// Sort by name
-	.sortBy('name', 'asc')
+	.orderBy('name', 'asc')
 	// Get first 10
 	.limit(10)
 	// Convert to array
@@ -158,7 +158,7 @@ poolOfPools.add(ukProxies, { region: 'UK' });
 // Find biggest pool
 const biggest = poolOfPools
 	.query()
-	.sortBy((a, b) => b.data.size - a.data.size)
+	.orderBy((a, b) => b.data.size - a.data.size)
 	.select(Selectors.first);
 ```
 

@@ -206,7 +206,7 @@ console.log('\n🎯 === SCENARIO 1: Finding Popular Games ===\n');
 const popularGames = games
 	.query()
 	.where((e) => e.meta.popularity >= 85)
-	.sortByMeta('popularity', 'desc')
+	.orderByMeta('popularity', 'desc')
 	.toArray();
 
 console.log('Popular games (85+ popularity):');
@@ -235,7 +235,7 @@ const elitePlayers = accounts
 	.query()
 	.where((e) => e.data.premium === true)
 	.where((e) => e.data.reputation >= 85)
-	.sortBy('level', 'desc')
+	.orderBy('level', 'desc')
 	.toArray();
 
 console.log('Elite premium players (rep >= 85):');
@@ -247,7 +247,7 @@ elitePlayers.forEach((acc) => {
 const problematicAccounts = accounts
 	.query()
 	.where((e) => e.meta.warnings >= 3 || e.data.reputation < 30)
-	.sortBy('reputation', 'asc')
+	.orderBy('reputation', 'asc')
 	.toArray();
 
 console.log('\nProblematic accounts:');
@@ -283,7 +283,7 @@ serversByGame.forEach((serverPool, gameId) => {
 			.query()
 			.where((e) => e.meta.status === 'online')
 			.where((e) => e.meta.load < e.data.maxCapacity * 0.8)
-			.sortBy('ping', 'asc')
+			.orderBy('ping', 'asc')
 			.select(Selectors.first);
 
 		if (bestServer) {
@@ -354,7 +354,7 @@ function joinGame(accountId: string, gameId: string, preferredRegion: string = '
 			(e) => e.data.region === preferredRegion,
 			(e) => e.data.region.startsWith('EU'), // Fallback к любому EU
 		])
-		.sortBy('ping', 'asc')
+		.orderBy('ping', 'asc')
 		.select(Selectors.first);
 
 	if (!bestServer) {
@@ -507,7 +507,7 @@ regionalServerPools.allEntries.forEach((entry) => {
 // Найти регион с наименьшей загрузкой
 const leastLoadedRegion = regionalServerPools
 	.query()
-	.sortBy((a, b) => {
+	.orderBy((a, b) => {
 		const loadA = a.data.allEntries.reduce((sum, s) => sum + (s.meta.load || 0), 0);
 		const capacityA = a.data.allEntries.reduce((sum, s) => sum + s.data.maxCapacity, 0);
 		const utilizationA = capacityA > 0 ? loadA / capacityA : 1;
@@ -589,8 +589,8 @@ console.log('Leaderboard (top 10 players):');
 accounts
 	.query()
 	.where((e) => !e.meta.banned)
-	.sortBy('level', 'desc')
-	.sortBy('reputation', 'desc') // Вторичная сортировка
+	.orderBy('level', 'desc')
+	.orderBy('reputation', 'desc') // Вторичная сортировка
 	.limit(10)
 	.toArray()
 	.forEach((acc, index) => {
@@ -601,7 +601,7 @@ console.log('\nNext 5 players (pagination):');
 accounts
 	.query()
 	.where((e) => !e.meta.banned)
-	.sortBy('level', 'desc')
+	.orderBy('level', 'desc')
 	.offset(10)
 	.limit(5)
 	.toArray()

@@ -24,7 +24,10 @@ describe('Query', () => {
 
 	describe('Filtering', () => {
 		test('where() should filter by predicate', () => {
-			const result = pool.query().where((e) => e.data.category === 'A').toArray();
+			const result = pool
+				.query()
+				.where((e) => e.data.category === 'A')
+				.toArray();
 
 			expect(result.length).toBe(3);
 			expect(result.every((r) => r.category === 'A')).toBe(true);
@@ -63,43 +66,39 @@ describe('Query', () => {
 	});
 
 	describe('Sorting', () => {
-		test('sortBy() field should sort ascending', () => {
-			const result = pool.query().sortBy('value', 'asc').toArray();
+		test('orderBy() field should sort ascending', () => {
+			const result = pool.query().orderBy('value', 'asc').toArray();
 
 			expect(result[0]?.value).toBe(100);
 			expect(result[4]?.value).toBe(400);
 		});
 
-		test('sortBy() field should sort descending', () => {
-			const result = pool.query().sortBy('value', 'desc').toArray();
+		test('orderBy() field should sort descending', () => {
+			const result = pool.query().orderBy('value', 'desc').toArray();
 
 			expect(result[0]?.value).toBe(400);
 			expect(result[4]?.value).toBe(100);
 		});
 
-		test('sortBy() function should sort correctly', () => {
+		test('orderBy() function should sort correctly', () => {
 			const result = pool
 				.query()
-				.sortBy((a, b) => b.data.value - a.data.value)
+				.orderBy((a, b) => b.data.value - a.data.value)
 				.toArray();
 
 			expect(result[0]?.value).toBe(400);
 			expect(result[4]?.value).toBe(100);
 		});
 
-		test('sortByMeta() should sort by metadata field', () => {
-			const result = pool.query().sortByMeta('priority', 'asc').toArray();
+		test('orderByMeta() should sort by metadata field', () => {
+			const result = pool.query().orderByMeta('priority', 'asc').toArray();
 
 			expect(result[0]?.id).toBe('1');
 			expect(result[result.length - 1]?.id).toBe('3');
 		});
 
-		test('sortBy() should chain multiple sorts', () => {
-			const result = pool
-				.query()
-				.sortBy('category', 'asc')
-				.sortBy('value', 'desc')
-				.toArray();
+		test('orderBy() should chain multiple sorts', () => {
+			const result = pool.query().orderBy('category', 'asc').orderBy('value', 'desc').toArray();
 
 			// Category A first, then sorted by value desc
 			expect(result[0]?.category).toBe('A');
@@ -212,7 +211,7 @@ describe('Query', () => {
 			const result = pool
 				.query()
 				.where((e) => e.meta.active === true)
-				.sortBy('value', 'desc')
+				.orderBy('value', 'desc')
 				.limit(2)
 				.toArray();
 
@@ -226,8 +225,8 @@ describe('Query', () => {
 				.query()
 				.where((e) => e.data.value > 100)
 				.whereOr([(e) => e.data.category === 'A', (e) => e.meta.priority === 1])
-				.sortBy('value', 'asc')
-				.sortByMeta('priority', 'desc')
+				.orderBy('value', 'asc')
+				.orderByMeta('priority', 'desc')
 				.offset(1)
 				.limit(2)
 				.toArray();
@@ -277,7 +276,9 @@ describe('Query', () => {
 				fired = true;
 			});
 
-			pool.query().where((e) => e.data.value > 1000).select(Selectors.first);
+			pool.query()
+				.where((e) => e.data.value > 1000)
+				.select(Selectors.first);
 
 			expect(fired).toBe(true);
 		});

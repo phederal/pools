@@ -52,7 +52,7 @@ export class Query<T> {
 	 * @param order - Sort order ('asc' or 'desc')
 	 * @returns This query instance for chaining
 	 */
-	sortBy(fnOrField: ((a: PoolEntry<T>, b: PoolEntry<T>) => number) | keyof T, order: 'asc' | 'desc' = 'asc'): this {
+	orderBy(fnOrField: ((a: PoolEntry<T>, b: PoolEntry<T>) => number) | keyof T, order: 'asc' | 'desc' = 'asc'): this {
 		if (typeof fnOrField === 'function') {
 			this.sorters.push(fnOrField);
 		} else {
@@ -73,7 +73,7 @@ export class Query<T> {
 	 * @param order - Sort order ('asc' or 'desc')
 	 * @returns This query instance for chaining
 	 */
-	sortByMeta(field: string, order: 'asc' | 'desc' = 'asc'): this {
+	orderByMeta(field: string, order: 'asc' | 'desc' = 'asc'): this {
 		this.sorters.push((a, b) => {
 			const aVal = a.meta[field];
 			const bVal = b.meta[field];

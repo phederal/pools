@@ -42,7 +42,7 @@ const usProxy = proxies
 console.log('First US proxy:', usProxy);
 
 // Query with sorting
-const fastestProxy = proxies.query().sortBy('speed', 'desc').select(Selectors.first);
+const fastestProxy = proxies.query().orderBy('speed', 'desc').select(Selectors.first);
 
 console.log('Fastest proxy:', fastestProxy);
 ```
@@ -79,7 +79,7 @@ Chain filters and selectors.
 ### Sorting
 
 ```typescript
-const fastest = proxies.query().sortBy('speed', 'desc').select(Selectors.first);
+const fastest = proxies.query().orderBy('speed', 'desc').select(Selectors.first);
 ```
 
 Sort by any field.
@@ -118,7 +118,7 @@ poolOfPools.add(ukPool, { region: 'Europe' });
 // Find biggest pool
 const biggest = poolOfPools
 	.query()
-	.sortBy((a, b) => b.data.size - a.data.size)
+	.orderBy((a, b) => b.data.size - a.data.size)
 	.select(Selectors.first);
 ```
 

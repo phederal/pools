@@ -96,8 +96,8 @@ const bestProxy = proxies
 	.where((e) => e.meta.active === true)
 	.whereOr([(e) => e.data.provider === 'ProviderA', (e) => e.data.provider === 'ProviderB'])
 	.where((e) => e.meta.usedCount < 10)
-	.sortBy('speed', 'desc') // первая сортировка по скорости
-	.sortByMeta('usedCount', 'asc') // вторая сортировка по использованию
+	.orderBy('speed', 'desc') // первая сортировка по скорости
+	.orderByMeta('usedCount', 'asc') // вторая сортировка по использованию
 	.select(Selectors.first);
 
 console.log('Best proxy (US, active, Provider A or B, low usage, high speed):', bestProxy);
@@ -108,7 +108,7 @@ console.log('\n=== Pagination ===\n');
 const page1Proxies = proxies
 	.query()
 	.where((e) => e.meta.active)
-	.sortBy('speed', 'desc')
+	.orderBy('speed', 'desc')
 	.limit(2)
 	.toArray();
 
@@ -117,7 +117,7 @@ console.log('Top 2 active proxies by speed:', page1Proxies);
 const page2Proxies = proxies
 	.query()
 	.where((e) => e.meta.active)
-	.sortBy('speed', 'desc')
+	.orderBy('speed', 'desc')
 	.offset(2)
 	.limit(2)
 	.toArray();
@@ -227,7 +227,7 @@ poolsByCountry.forEach((pool, country) => {
 	const top2 = pool
 		.query()
 		.where((e) => e.meta.active)
-		.sortBy('speed', 'desc')
+		.orderBy('speed', 'desc')
 		.limit(2)
 		.toPool();
 
