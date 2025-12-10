@@ -40,5 +40,8 @@ export default defineConfig({
 			},
 		],
 		socialLinks: [{ icon: 'github', link: 'https://github.com/yourusername/pools' }],
+		search: {
+			provider: 'local',
+		},
 	},
 });
