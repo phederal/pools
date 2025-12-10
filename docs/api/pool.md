@@ -77,7 +77,7 @@ pool.get(predicate: (entry: PoolEntry<T>) => boolean): T | null
 const user = pool.get('id', 'user123');
 
 // By predicate
-const admin = pool.get(e => e.data.role === 'admin');
+const admin = pool.get(({ data }) => data.role === 'admin');
 ```
 
 ### has()

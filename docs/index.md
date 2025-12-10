@@ -43,8 +43,8 @@ proxies.add(
 // Query with filters and sorting
 const bestProxy = proxies
   .query()
-  .where(e => e.data.country === 'US')
-  .where(e => e.meta.active === true)
+  .where(({ data }) => data.country === 'US')
+  .where(({ meta }) => meta.active === true)
   .sortBy('speed', 'desc')
   .select(Selectors.first);
 

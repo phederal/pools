@@ -2,11 +2,11 @@
 
 Methods for adding, updating, and removing entries from the pool.
 
-::: tip Best Practice - Destructuring
-When using predicates, destructure `{ data, meta }` for cleaner code:
+::: tip Destructuring Option
+You can use destructuring for shorter syntax. Both ways are valid:
 ```typescript
-pool.remove(({ data }) => data.id === '123')  // ✅ Clean
-pool.remove(e => e.data.id === '123')         // ❌ Verbose
+pool.remove(({ data }) => data.id === '123')  // With destructuring
+pool.remove(e => e.data.id === '123')         // Without destructuring
 ```
 :::
 

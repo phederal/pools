@@ -7,7 +7,8 @@
       "Bash(bun test --help:*)",
       "Bash(bun test:*)",
       "Bash(bun add:*)",
-      "Bash(bun install:*)"
+      "Bash(bun install:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

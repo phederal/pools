@@ -38,7 +38,7 @@ users.add(
 // 4. Query data
 const activeUser = users
   .query()
-  .where(e => e.meta.active === true)
+  .where(({ meta }) => meta.active === true)
   .select(Selectors.first);
 
 console.log(activeUser); // Alice
@@ -96,9 +96,9 @@ Chain filters, sorting, and pagination:
 const result = users
   .query()
   // Filter by age
-  .where(e => e.data.age >= 18)
+  .where(({ data }) => data.age >= 18)
   // Filter by active status
-  .where(e => e.meta.active === true)
+  .where(({ meta }) => meta.active === true)
   // Sort by name
   .sortBy('name', 'asc')
   // Get first 10
@@ -145,8 +145,8 @@ const accounts = new Pool<Account>();
 const combo = new PoolBinder()
   .bind('proxy', proxies)
   .bind('account', accounts)
-  .where('proxy', e => e.data.country === 'US')
-  .where('account', e => e.data.service === 'twitter')
+  .where('proxy', ({ data }) => data.country === 'US')
+  .where('account', ({ data }) => data.service === 'twitter')
   .selectWith('proxy', Selectors.minBy('usedCount'))
   .selectWith('account', Selectors.random)
   .execute();
