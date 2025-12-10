@@ -4,7 +4,7 @@ Simple examples of using the Pools library.
 
 ## Source Code
 
-[View on GitHub](https://github.com/yourusername/pools/blob/main/examples/basic.ts)
+[View on GitHub](https://github.com/phederal/pools/blob/main/examples/basic.ts)
 
 ## Running
 
@@ -19,9 +19,9 @@ import { Pool, Selectors, PoolBinder } from '../src';
 
 // Create a pool of proxies
 interface Proxy {
-  ip: string;
-  country: string;
-  speed: number;
+	ip: string;
+	country: string;
+	speed: number;
 }
 
 const proxies = new Pool<Proxy>();
@@ -35,17 +35,14 @@ console.log(`Total proxies: ${proxies.size}`);
 
 // Query with filter
 const usProxy = proxies
-  .query()
-  .where((e) => e.data.country === 'US')
-  .select(Selectors.first);
+	.query()
+	.where((e) => e.data.country === 'US')
+	.select(Selectors.first);
 
 console.log('First US proxy:', usProxy);
 
 // Query with sorting
-const fastestProxy = proxies
-  .query()
-  .sortBy('speed', 'desc')
-  .select(Selectors.first);
+const fastestProxy = proxies.query().sortBy('speed', 'desc').select(Selectors.first);
 
 console.log('Fastest proxy:', fastestProxy);
 ```
@@ -63,10 +60,7 @@ Simple pool creation with TypeScript generics.
 ### Adding Data
 
 ```typescript
-proxies.add(
-  { ip: '1.1.1.1', country: 'US', speed: 100 },
-  { usedCount: 0 }
-);
+proxies.add({ ip: '1.1.1.1', country: 'US', speed: 100 }, { usedCount: 0 });
 ```
 
 Add data with optional metadata.
@@ -75,9 +69,9 @@ Add data with optional metadata.
 
 ```typescript
 const proxy = proxies
-  .query()
-  .where((e) => e.data.country === 'US')
-  .select(Selectors.first);
+	.query()
+	.where((e) => e.data.country === 'US')
+	.select(Selectors.first);
 ```
 
 Chain filters and selectors.
@@ -85,10 +79,7 @@ Chain filters and selectors.
 ### Sorting
 
 ```typescript
-const fastest = proxies
-  .query()
-  .sortBy('speed', 'desc')
-  .select(Selectors.first);
+const fastest = proxies.query().sortBy('speed', 'desc').select(Selectors.first);
 ```
 
 Sort by any field.
@@ -97,8 +88,8 @@ Sort by any field.
 
 ```typescript
 proxies.on('get', (entry) => {
-  entry.meta.usedCount++;
-  console.log(`Proxy ${entry.data.ip} used`);
+	entry.meta.usedCount++;
+	console.log(`Proxy ${entry.data.ip} used`);
 });
 ```
 
@@ -108,11 +99,11 @@ Listen to pool operations.
 
 ```typescript
 const combo = new PoolBinder()
-  .bind('proxy', proxies)
-  .bind('account', accounts)
-  .where('proxy', (e) => e.data.country === 'US')
-  .selectWith('proxy', Selectors.minBy('usedCount'))
-  .execute();
+	.bind('proxy', proxies)
+	.bind('account', accounts)
+	.where('proxy', (e) => e.data.country === 'US')
+	.selectWith('proxy', Selectors.minBy('usedCount'))
+	.execute();
 ```
 
 Combine multiple pools.
@@ -126,9 +117,9 @@ poolOfPools.add(ukPool, { region: 'Europe' });
 
 // Find biggest pool
 const biggest = poolOfPools
-  .query()
-  .sortBy((a, b) => b.data.size - a.data.size)
-  .select(Selectors.first);
+	.query()
+	.sortBy((a, b) => b.data.size - a.data.size)
+	.select(Selectors.first);
 ```
 
 Store and query pools within pools.

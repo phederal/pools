@@ -9,7 +9,7 @@ export default defineConfig({
 			{ text: 'Home', link: '/' },
 			{ text: 'API', link: '/api/' },
 			{ text: 'Examples', link: '/examples/' },
-			{ text: 'GitHub', link: 'https://github.com/yourusername/pools' },
+			{ text: 'GitHub', link: 'https://github.com/phederal/pools' },
 		],
 		sidebar: [
 			{
@@ -52,7 +52,7 @@ export default defineConfig({
 				],
 			},
 		],
-		socialLinks: [{ icon: 'github', link: 'https://github.com/yourusername/pools' }],
+		socialLinks: [{ icon: 'github', link: 'https://github.com/phederal/pools' }],
 		search: {
 			provider: 'local',
 		},
