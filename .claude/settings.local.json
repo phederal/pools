@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(bun tsc:*)",
+      "Bash(bun test --help:*)",
+      "Bash(bun test:*)",
+      "Bash(bun add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
