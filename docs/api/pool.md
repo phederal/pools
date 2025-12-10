@@ -198,7 +198,7 @@ Creates a query builder.
 pool.query(): PoolQuery<T>
 ```
 
-See [PoolQuery](/api/pool-query) for details.
+See [PoolQuery](/api/query) for details.
 
 ## Combining Pools
 

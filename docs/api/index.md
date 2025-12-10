@@ -5,8 +5,8 @@ Complete API documentation for the Pools library.
 ## Core Classes
 
 - [Pool](/api/pool) - Main class for managing data collections
-- [PoolQuery](/api/pool-query) - Query builder for filtering and sorting
-- [PoolBinder](/api/pool-binder) - Bind multiple pools together
+- [PoolQuery](/api/query) - Query builder for filtering and sorting
+- [PoolBinder](/api/binder) - Bind multiple pools together
 - [Selectors](/api/selectors) - Built-in selection strategies
 
 ## Types
@@ -30,6 +30,6 @@ type Selector<T> = (entries: PoolEntry<T>[]) => PoolEntry<T> | null;
 | Class | Description |
 |-------|-------------|
 | [Pool](/api/pool) | Main pool class with CRUD, Map-like operations, and events |
-| [PoolQuery](/api/pool-query) | Chainable query API for filtering and sorting |
-| [PoolBinder](/api/pool-binder) | Combine multiple pools for complex selections |
+| [PoolQuery](/api/query) | Chainable query API for filtering and sorting |
+| [PoolBinder](/api/binder) | Combine multiple pools for complex selections |
 | [Selectors](/api/selectors) | Built-in selectors: first, last, random, minBy, weighted |
