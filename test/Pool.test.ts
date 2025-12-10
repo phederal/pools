@@ -212,7 +212,7 @@ describe('Pool', () => {
 			pool2.add({ id: '1', name: 'test1', value: 100 });
 			pool2.add({ id: '2', name: 'test2', value: 200 });
 
-			pool.mergeUnique(pool2, 'id');
+			pool.mergeUnique('id', pool2);
 
 			expect(pool.size).toBe(2);
 		});

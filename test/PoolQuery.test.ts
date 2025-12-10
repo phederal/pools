@@ -10,7 +10,7 @@ interface TestData {
 	category: string;
 }
 
-describe('PoolQuery', () => {
+describe('Query', () => {
 	let pool: Pool<TestData>;
 
 	beforeEach(() => {

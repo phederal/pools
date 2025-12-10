@@ -1,4 +1,4 @@
-import { Pool, Selectors, PoolBinder } from '../src';
+import { Pool, Selectors, Binder } from '../src';
 import type { PoolEntry } from '../src/types';
 
 // ========== ТИПЫ ==========
@@ -384,10 +384,10 @@ console.log(`\nTotal active player sessions: ${playerSessions.size}`);
 
 // ========== СЦЕНАРИЙ 7: ИСПОЛЬЗОВАНИЕ POOLBINDER ==========
 
-console.log('\n🔗 === SCENARIO 7: Complex Matchmaking with PoolBinder ===\n');
+console.log('\n🔗 === SCENARIO 7: Complex Matchmaking with Binder ===\n');
 
 // Найти оптимальную комбинацию: игра + аккаунт + сервер
-const matchmaking = new PoolBinder()
+const matchmaking = new Binder()
 	.bind('game', games)
 	.bind('account', accounts)
 	.bind('server', gameServers)

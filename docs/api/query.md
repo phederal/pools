@@ -1,4 +1,4 @@
-# PoolQuery
+# Query
 
 Query builder for filtering, sorting, and selecting entries from a pool.
 
@@ -13,7 +13,7 @@ Create a query using `pool.query()`, then chain methods to build your query.
 Adds a filter to the query.
 
 ```typescript
-query.where(filter: Filter<T>): PoolQuery<T>
+query.where(filter: Filter<T>): Query<T>
 ```
 
 **Example:**
@@ -30,7 +30,7 @@ const result = pool
 Adds an OR filter (matches any of the predicates).
 
 ```typescript
-query.whereOr(filters: Filter<T>[]): PoolQuery<T>
+query.whereOr(filters: Filter<T>[]): Query<T>
 ```
 
 **Example:**
@@ -51,8 +51,8 @@ const result = pool
 Sorts by a field or custom comparator.
 
 ```typescript
-query.sortBy(field: keyof T, order: 'asc' | 'desc'): PoolQuery<T>
-query.sortBy(compareFn: (a: PoolEntry<T>, b: PoolEntry<T>) => number): PoolQuery<T>
+query.sortBy(field: keyof T, order: 'asc' | 'desc'): Query<T>
+query.sortBy(compareFn: (a: PoolEntry<T>, b: PoolEntry<T>) => number): Query<T>
 ```
 
 **Examples:**
@@ -69,7 +69,7 @@ pool.query().sortBy((a, b) => b.data.speed - a.data.speed);
 Sorts by a metadata field.
 
 ```typescript
-query.sortByMeta(field: string, order: 'asc' | 'desc'): PoolQuery<T>
+query.sortByMeta(field: string, order: 'asc' | 'desc'): Query<T>
 ```
 
 **Example:**
@@ -84,7 +84,7 @@ pool.query().sortByMeta('usedCount', 'asc');
 Limits the number of results.
 
 ```typescript
-query.take(count: number): PoolQuery<T>
+query.take(count: number): Query<T>
 ```
 
 **Example:**
@@ -97,7 +97,7 @@ pool.query().take(10).toArray(); // Get first 10
 Skips a number of results.
 
 ```typescript
-query.offset(count: number): PoolQuery<T>
+query.offset(count: number): Query<T>
 ```
 
 **Example:**

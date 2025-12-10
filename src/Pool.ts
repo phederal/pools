@@ -1,4 +1,4 @@
-import { PoolQuery } from './PoolQuery';
+import { Query } from './Query';
 import type { PoolEntry, Filter, Selector } from './types';
 
 /**
@@ -166,10 +166,10 @@ export class Pool<T> {
 
 	/**
 	 * Creates a query builder for filtering and selecting entries
-	 * @returns A new PoolQuery instance
+	 * @returns A new Query instance
 	 */
-	query(): PoolQuery<T> {
-		const query = new PoolQuery(this.entries);
+	query(): Query<T> {
+		const query = new Query(this.entries);
 
 		// Wrap select to emit events
 		const originalSelect = query.select.bind(query);
@@ -196,50 +196,65 @@ export class Pool<T> {
 	}
 
 	/**
-	 * Merges another pool or query into this pool
-	 * @param source - Pool or PoolQuery to merge from
+	 * Merges one or more pools or queries into this pool
+	 * @param sources - Pools or PoolQueries to merge from (as individual arguments or arrays)
 	 * @returns This pool for chaining
+	 * @example
+	 * pool.merge(pool1, pool2, pool3)
+	 * pool.merge([pool1, pool2])
+	 * pool.merge(pool1, [pool2, pool3])
 	 */
-	merge(source: Pool<T> | PoolQuery<T>): this {
-		if (source instanceof Pool) {
-			this.entries.push(...source.entries);
-		} else {
-			// PoolQuery - convert to entries
-			const data = source.toArray();
-			data.forEach((d) => this.add(d));
-		}
+	merge(...sources: (Pool<T> | Query<T> | (Pool<T> | Query<T>)[])[]): this {
+		const flatSources = sources.flat();
+
+		flatSources.forEach((source) => {
+			if (source instanceof Pool) {
+				this.entries.push(...source.entries);
+			} else {
+				// Query - convert to entries
+				const data = source.toArray();
+				data.forEach((d) => this.add(d));
+			}
+		});
+
 		return this;
 	}
 
 	/**
-	 * Merges another pool ensuring uniqueness by a field or function
-	 * @param source - Pool or PoolQuery to merge from
+	 * Merges one or more pools or queries ensuring uniqueness by a field or function
 	 * @param uniqueBy - Field name or function to determine uniqueness
+	 * @param sources - Pools or PoolQueries to merge from (as individual arguments or arrays)
 	 * @returns This pool for chaining
+	 * @example
+	 * pool.mergeUnique('id', pool1, pool2)
+	 * pool.mergeUnique('id', [pool1, pool2])
+	 * pool.mergeUnique(x => x.id, pool1, pool2)
 	 */
-	mergeUnique(source: Pool<T> | PoolQuery<T>, uniqueBy: keyof T | ((item: T) => any)): this {
+	mergeUnique(uniqueBy: keyof T | ((item: T) => any), ...sources: (Pool<T> | Query<T> | (Pool<T> | Query<T>)[])[]): this {
 		const getKey = typeof uniqueBy === 'function' ? uniqueBy : (item: T) => item[uniqueBy];
-
 		const existingKeys = new Set(this.entries.map((e) => getKey(e.data)));
+		const flatSources = sources.flat();
 
-		if (source instanceof Pool) {
-			source.entries.forEach((entry) => {
-				const key = getKey(entry.data);
-				if (!existingKeys.has(key)) {
-					this.entries.push(entry);
-					existingKeys.add(key);
-				}
-			});
-		} else {
-			const data = source.toArray();
-			data.forEach((d) => {
-				const key = getKey(d);
-				if (!existingKeys.has(key)) {
-					this.add(d);
-					existingKeys.add(key);
-				}
-			});
-		}
+		flatSources.forEach((source) => {
+			if (source instanceof Pool) {
+				source.entries.forEach((entry) => {
+					const key = getKey(entry.data);
+					if (!existingKeys.has(key)) {
+						this.entries.push(entry);
+						existingKeys.add(key);
+					}
+				});
+			} else {
+				const data = source.toArray();
+				data.forEach((d) => {
+					const key = getKey(d);
+					if (!existingKeys.has(key)) {
+						this.add(d);
+						existingKeys.add(key);
+					}
+				});
+			}
+		});
 
 		return this;
 	}
@@ -466,9 +481,9 @@ export class Pool<T> {
 	 * @param uniqueBy - Field or function to determine uniqueness
 	 * @returns New merged pool
 	 */
-	static mergeUnique<T>(sources: (Pool<T> | PoolQuery<T>)[], uniqueBy: keyof T | ((item: T) => any)): Pool<T> {
+	static mergeUnique<T>(sources: (Pool<T> | Query<T>)[], uniqueBy: keyof T | ((item: T) => any)): Pool<T> {
 		const merged = new Pool<T>();
-		sources.forEach((source) => merged.mergeUnique(source, uniqueBy));
+		sources.forEach((source) => merged.mergeUnique(uniqueBy, source));
 		return merged;
 	}
 
@@ -480,7 +495,7 @@ export class Pool<T> {
 	 * @returns New merged pool
 	 */
 	static mergeUniqueWith<T>(
-		sources: (Pool<T> | PoolQuery<T>)[],
+		sources: (Pool<T> | Query<T>)[],
 		uniqueBy: keyof T | ((item: T) => any),
 		resolveDuplicate: (existing: PoolEntry<T>, duplicate: PoolEntry<T>) => PoolEntry<T>
 	): Pool<T> {
@@ -526,18 +541,18 @@ export class Pool<T> {
 	 * @param groupBy - Field or function to group by
 	 * @returns Map of group keys to pools
 	 */
-	static groupBy<T>(sources: (Pool<T> | PoolQuery<T>)[], groupBy: keyof T | ((item: T) => any)): Map<any, Pool<T>> {
+	static groupBy<T>(sources: (Pool<T> | Query<T>)[], groupBy: keyof T | ((item: T) => any)): Map<any, Pool<T>> {
 		const merged = new Pool<T>();
 		sources.forEach((source) => merged.merge(source));
 		return merged.groupBy(groupBy);
 	}
 
 	/**
-	 * Creates a Pool from a PoolQuery
+	 * Creates a Pool from a Query
 	 * @param query - Query to convert to pool
 	 * @returns New pool with query results
 	 */
-	static fromQuery<T>(query: PoolQuery<T>): Pool<T> {
+	static fromQuery<T>(query: Query<T>): Pool<T> {
 		const pool = new Pool<T>();
 		const entries = query.materialize();
 		entries.forEach((entry) => {
