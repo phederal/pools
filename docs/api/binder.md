@@ -1,15 +1,15 @@
-# PoolBinder
+# Binder
 
 Bind multiple pools together for complex resource allocation.
 
 ::: tip Use Case
-PoolBinder is perfect when you need to select items from multiple pools at once, like combining a proxy, account, and server for a task.
+Binder is perfect when you need to select items from multiple pools at once, like combining a proxy, account, and server for a task.
 :::
 
 ## Constructor
 
 ```typescript
-const binder = new PoolBinder();
+const binder = new Binder();
 ```
 
 ## Methods
@@ -19,12 +19,12 @@ const binder = new PoolBinder();
 Binds a pool with a name.
 
 ```typescript
-binder.bind<T>(name: string, pool: Pool<T>): PoolBinder
+binder.bind<T>(name: string, pool: Pool<T>): Binder
 ```
 
 **Example:**
 ```typescript
-const binder = new PoolBinder()
+const binder = new Binder()
   .bind('proxy', proxies)
   .bind('account', accounts)
   .bind('service', services);
@@ -35,7 +35,7 @@ const binder = new PoolBinder()
 Adds a filter for a specific pool.
 
 ```typescript
-binder.where<T>(poolName: string, filter: Filter<T>): PoolBinder
+binder.where<T>(poolName: string, filter: Filter<T>): Binder
 ```
 
 **Example:**
@@ -50,7 +50,7 @@ binder
 Sets the selector for a specific pool.
 
 ```typescript
-binder.selectWith<T>(poolName: string, selector: Selector<T>): PoolBinder
+binder.selectWith<T>(poolName: string, selector: Selector<T>): Binder
 ```
 
 **Example:**
@@ -86,7 +86,7 @@ if (result) {
 ## Complete Example
 
 ```typescript
-import { Pool, PoolBinder, Selectors } from 'pools';
+import { Pool, Binder, Selectors } from 'pools';
 
 // Create pools
 const proxies = new Pool<Proxy>();
@@ -99,7 +99,7 @@ accounts.add({ username: 'user1', service: 'twitter' });
 services.add({ name: 'API', url: 'https://api.twitter.com' });
 
 // Bind pools together
-const combo = new PoolBinder()
+const combo = new Binder()
   .bind('proxy', proxies)
   .bind('account', accounts)
   .bind('service', services)
@@ -127,7 +127,7 @@ if (combo) {
 Allocate multiple resources for a task:
 
 ```typescript
-const resources = new PoolBinder()
+const resources = new Binder()
   .bind('proxy', proxies)
   .bind('account', accounts)
   .where('proxy', e => e.meta.usedCount < 10)
@@ -142,7 +142,7 @@ const resources = new PoolBinder()
 Select a server and session together:
 
 ```typescript
-const combo = new PoolBinder()
+const combo = new Binder()
   .bind('server', servers)
   .bind('session', sessions)
   .where('server', e => e.data.region === 'EU')
@@ -156,7 +156,7 @@ const combo = new PoolBinder()
 
 ```typescript
 // Find matching proxy and account from different providers
-const result = new PoolBinder()
+const result = new Binder()
   .bind('proxy', proxies)
   .bind('account', accounts)
   .where('proxy', e => e.data.provider === 'ProviderA')

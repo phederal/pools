@@ -5,7 +5,7 @@ import { Pool } from './Pool';
  * Query builder for filtering and selecting pool entries
  * @template T - The type of data in the pool
  */
-export class PoolQuery<T> {
+export class Query<T> {
 	private entries: PoolEntry<T>[];
 	private filters: Filter<T>[] = [];
 	private sorters: Array<(a: PoolEntry<T>, b: PoolEntry<T>) => number> = [];

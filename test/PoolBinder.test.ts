@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from 'bun:test';
 import { Pool } from '../src/Pool';
-import { PoolBinder } from '../src/PoolBinder';
+import { Binder } from '../src/Binder';
 import { Selectors } from '../src/Selectors';
 import type { PoolEntry } from '../src/types';
 
@@ -20,7 +20,7 @@ interface Server {
 	region: string;
 }
 
-describe('PoolBinder', () => {
+describe('Binder', () => {
 	let proxies: Pool<Proxy>;
 	let accounts: Pool<Account>;
 	let servers: Pool<Server>;
@@ -44,7 +44,7 @@ describe('PoolBinder', () => {
 
 	describe('Binding Pools', () => {
 		test('bind() should add pool to binder', () => {
-			const binder = new PoolBinder().bind('proxy', proxies);
+			const binder = new Binder().bind('proxy', proxies);
 
 			const result = binder.execute();
 
@@ -53,7 +53,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('bind() should chain multiple pools', () => {
-			const binder = new PoolBinder().bind('proxy', proxies).bind('account', accounts).bind('server', servers);
+			const binder = new Binder().bind('proxy', proxies).bind('account', accounts).bind('server', servers);
 
 			const result = binder.execute();
 
@@ -64,7 +64,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('execute() should return null if no pools bound', () => {
-			const binder = new PoolBinder();
+			const binder = new Binder();
 
 			const result = binder.execute();
 
@@ -75,7 +75,7 @@ describe('PoolBinder', () => {
 
 	describe('Filtering', () => {
 		test('where() should filter pool entries', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.country === 'US');
 
@@ -85,7 +85,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('where() should chain multiple filters', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.country === 'US')
 				.where('proxy', (e: PoolEntry<Proxy>) => e.meta.usedCount < 5);
@@ -98,7 +98,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('where() should work on multiple pools', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.bind('account', accounts)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.country === 'US')
@@ -111,7 +111,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('execute() should return null if any pool has no matches', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.country === 'FR');
 
@@ -123,7 +123,7 @@ describe('PoolBinder', () => {
 
 	describe('Selection', () => {
 		test('selectWith() should use custom selector', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.country === 'US')
 				.selectWith('proxy', Selectors.minBy('usedCount'));
@@ -135,7 +135,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('selectWith() should work on multiple pools', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.bind('account', accounts)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.country === 'US')
@@ -150,7 +150,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('should use random selector by default', () => {
-			const binder = new PoolBinder().bind('proxy', proxies);
+			const binder = new Binder().bind('proxy', proxies);
 
 			const result = binder.execute();
 
@@ -161,7 +161,7 @@ describe('PoolBinder', () => {
 
 	describe('Complex Scenarios', () => {
 		test('should bind three pools with filters and selectors', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.bind('account', accounts)
 				.bind('server', servers)
@@ -183,7 +183,7 @@ describe('PoolBinder', () => {
 
 		test('should handle empty pools gracefully', () => {
 			const emptyPool = new Pool<Proxy>();
-			const binder = new PoolBinder().bind('proxy', emptyPool);
+			const binder = new Binder().bind('proxy', emptyPool);
 
 			const result = binder.execute();
 
@@ -191,7 +191,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('should return null when filter makes pool empty', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.bind('account', accounts)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.country === 'US')
@@ -203,7 +203,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('should work with only one pool', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.speed > 100)
 				.selectWith('proxy', Selectors.first);
@@ -217,7 +217,7 @@ describe('PoolBinder', () => {
 
 	describe('Result Structure', () => {
 		test('should return data objects not entries', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.ip === '1.1.1.1')
 				.selectWith('proxy', Selectors.first);
@@ -231,7 +231,7 @@ describe('PoolBinder', () => {
 		});
 
 		test('should return data for all bound pools', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.bind('account', accounts)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.ip === '1.1.1.1')
@@ -247,7 +247,7 @@ describe('PoolBinder', () => {
 
 	describe('Type Safety', () => {
 		test('should return correctly typed results', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.bind('account', accounts);
 
@@ -266,7 +266,7 @@ describe('PoolBinder', () => {
 
 	describe('Weighted Selection', () => {
 		test('should work with weighted selector', () => {
-			const binder = new PoolBinder()
+			const binder = new Binder()
 				.bind('proxy', proxies)
 				.where('proxy', (e: PoolEntry<Proxy>) => e.data.country === 'US')
 				.selectWith(

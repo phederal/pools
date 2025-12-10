@@ -1,4 +1,4 @@
-import { Pool, Selectors, PoolBinder } from '../src';
+import { Pool, Selectors, Binder } from '../src';
 import type { PoolEntry } from '../src/types';
 
 console.log('=== Basic Pool Example ===\n');
@@ -56,8 +56,8 @@ proxies.on('get', (entry: PoolEntry<Proxy>) => {
 proxies.query().select(Selectors.random);
 proxies.query().select(Selectors.random);
 
-// PoolBinder example
-console.log('\n=== PoolBinder Example ===\n');
+// Binder example
+console.log('\n=== Binder Example ===\n');
 
 interface Account {
 	username: string;
@@ -68,7 +68,7 @@ const accounts = new Pool<Account>();
 accounts.add({ username: 'user1', service: 'twitter' });
 accounts.add({ username: 'user2', service: 'facebook' });
 
-const combo = new PoolBinder()
+const combo = new Binder()
 	.bind('proxy', proxies)
 	.bind('account', accounts)
 	.where('proxy', (e: PoolEntry<Proxy>) => e.data.country === 'US')

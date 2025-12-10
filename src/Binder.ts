@@ -3,9 +3,9 @@ import type { Filter, Selector } from './types';
 import { Selectors } from './Selectors';
 
 /**
- * PoolBinder allows binding multiple pools together and selecting from them
+ * Binder allows binding multiple pools together and selecting from them
  */
-export class PoolBinder {
+export class Binder {
 	private pools: Map<string, Pool<any>> = new Map();
 	private filters: Map<string, Filter<any>[]> = new Map();
 	private selectors: Map<string, Selector<any>> = new Map();

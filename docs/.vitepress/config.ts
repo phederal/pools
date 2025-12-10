@@ -23,9 +23,22 @@ export default defineConfig({
 			{
 				text: 'API Reference',
 				items: [
-					{ text: 'Pool', link: '/api/pool' },
-					{ text: 'PoolQuery', link: '/api/pool-query' },
-					{ text: 'PoolBinder', link: '/api/pool-binder' },
+					{
+						text: 'Pool',
+						collapsed: false,
+						items: [
+							{ text: 'CRUD Operations', link: '/api/pool/crud' },
+							{ text: 'Map-like Operations', link: '/api/pool/map-like' },
+							{ text: 'Query Operations', link: '/api/pool/query' },
+							{ text: 'Merge & Combination', link: '/api/pool/merge' },
+							{ text: 'Transformation', link: '/api/pool/transform' },
+							{ text: 'Iteration Methods', link: '/api/pool/iteration' },
+							{ text: 'Events & Hooks', link: '/api/pool/events' },
+							{ text: 'Properties', link: '/api/pool/properties' },
+						],
+					},
+					{ text: 'Query', link: '/api/query' },
+					{ text: 'Binder', link: '/api/binder' },
 					{ text: 'Selectors', link: '/api/selectors' },
 				],
 			},

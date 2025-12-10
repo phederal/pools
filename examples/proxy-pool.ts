@@ -1,4 +1,4 @@
-import { Pool, Selectors, PoolBinder } from '../src';
+import { Pool, Selectors, Binder } from '../src';
 import type { PoolEntry } from '../src/types';
 
 // ========== ОПРЕДЕЛЕНИЕ ТИПОВ ==========
@@ -199,7 +199,7 @@ console.log(`\nRandom sample of 3 proxies: ${randomSample.all.map((p) => p.ip).j
 
 console.log('\n=== Pool Binding ===\n');
 
-const binder = new PoolBinder()
+const binder = new Binder()
 	.bind('proxy', proxies)
 	.bind('account', accounts)
 	.bind('service', services)
