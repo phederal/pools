@@ -14,10 +14,11 @@ pool.query(): Query<T>
 
 **Example:**
 ```typescript
+// Using destructuring for cleaner syntax
 const user = pool
   .query()
-  .where(e => e.data.country === 'US')
-  .where(e => e.meta.active === true)
+  .where(({ data }) => data.country === 'US')
+  .where(({ meta }) => meta.active === true)
   .sortBy('age', 'desc')
   .select(Selectors.first);
 ```

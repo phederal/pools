@@ -2,6 +2,14 @@
 
 Methods for adding, updating, and removing entries from the pool.
 
+::: tip Best Practice - Destructuring
+When using predicates, destructure `{ data, meta }` for cleaner code:
+```typescript
+pool.remove(({ data }) => data.id === '123')  // ✅ Clean
+pool.remove(e => e.data.id === '123')         // ❌ Verbose
+```
+:::
+
 ## add()
 
 Adds an entry to the pool.
@@ -62,7 +70,8 @@ pool.remove(predicate: (data: T) => boolean): PoolEntry<T>[]
 
 **Example:**
 ```typescript
-const removed = pool.remove(user => user.id === '123');
+// Using destructuring for cleaner syntax
+const removed = pool.remove(({ data }) => data.id === '123');
 ```
 
 ## removeBatch()
@@ -81,12 +90,12 @@ pool.removeBatch(predicates: Array<(data: T) => boolean>): PoolEntry<T>[]
 **Example:**
 ```typescript
 pool.removeBatch([
-  user => user.id === '1',
-  user => user.id === '2',
+  ({ data }) => data.id === '1',
+  ({ data }) => data.id === '2',
 ]);
 ```
 
 **Note:** You can often achieve the same with a single predicate:
 ```typescript
-pool.remove(user => user.id === '1' || user.id === '2');
+pool.remove(({ data }) => data.id === '1' || data.id === '2');
 ```
