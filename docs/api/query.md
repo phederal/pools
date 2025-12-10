@@ -6,13 +6,13 @@ Query builder for filtering, sorting, and selecting entries from a pool.
 Create a query using `pool.query()`, then chain methods to build your query.
 :::
 
-::: tip Best Practice - Destructuring
-Use destructuring in predicates for cleaner, more readable code:
+::: tip Destructuring Option
+You can use destructuring for shorter syntax. Both ways are valid:
 ```typescript
-// ✅ Good - with destructuring
+// With destructuring (shorter)
 .where(({ data, meta }) => data.country === 'US' && meta.active)
 
-// ❌ Verbose - without destructuring
+// Without destructuring (also fine)
 .where(e => e.data.country === 'US' && e.meta.active)
 ```
 :::
@@ -133,7 +133,7 @@ import { Selectors } from 'pools';
 
 const proxy = pool
   .query()
-  .where(e => e.data.country === 'US')
+  .where(({ data }) => data.country === 'US')
   .select(Selectors.random);
 ```
 
@@ -149,7 +149,7 @@ query.toArray(): T[]
 ```typescript
 const users = pool
   .query()
-  .where(e => e.data.active)
+  .where(({ data }) => data.active)
   .sortBy('name', 'asc')
   .toArray();
 ```
@@ -166,7 +166,7 @@ query.toPool(): Pool<T>
 ```typescript
 const activeUsers = pool
   .query()
-  .where(e => e.data.active)
+  .where(({ data }) => data.active)
   .toPool();
 ```
 
@@ -182,7 +182,7 @@ query.count: number
 ```typescript
 const activeCount = pool
   .query()
-  .where(e => e.data.active)
+  .where(({ data }) => data.active)
   .count;
 ```
 
@@ -192,13 +192,13 @@ const activeCount = pool
 const result = pool
   .query()
   // Filter by country
-  .where(e => e.data.country === 'US')
+  .where(({ data }) => data.country === 'US')
   // Filter by active status
-  .where(e => e.meta.active === true)
+  .where(({ meta }) => meta.active === true)
   // Allow multiple providers
   .whereOr([
-    e => e.data.provider === 'A',
-    e => e.data.provider === 'B'
+    ({ data }) => data.provider === 'A',
+    ({ data }) => data.provider === 'B'
   ])
   // Sort by speed (descending)
   .sortBy('speed', 'desc')

@@ -94,7 +94,7 @@ const proxy = pool
 // Prefer higher-speed entries
 const proxy = pool
   .query()
-  .select(Selectors.weighted(e => e.data.speed));
+  .select(Selectors.weighted(({ data }) => data.speed));
 
 // Custom weight function
 const proxy = pool
@@ -142,20 +142,20 @@ import { Selectors } from 'pools';
 // Random US proxy
 const proxy = pool
   .query()
-  .where(e => e.data.country === 'US')
+  .where(({ data }) => data.country === 'US')
   .select(Selectors.random);
 
 // Least-used active proxy
 const proxy = pool
   .query()
-  .where(e => e.meta.active === true)
+  .where(({ meta }) => meta.active === true)
   .sortBy('speed', 'desc')
   .select(Selectors.minBy('usedCount'));
 
 // Weighted selection based on speed and usage
 const proxy = pool
   .query()
-  .where(e => e.data.country === 'US')
+  .where(({ data }) => data.country === 'US')
   .select(Selectors.weighted(e => {
     return e.data.speed / (e.meta.usedCount + 1);
   }));
@@ -169,7 +169,7 @@ const proxy = pool
 // Select least-used server
 const server = servers
   .query()
-  .where(e => e.meta.healthy)
+  .where(({ meta }) => meta.healthy)
   .select(Selectors.minBy('activeConnections'));
 ```
 
@@ -179,13 +179,13 @@ const server = servers
 // Try primary, fallback to secondary
 let server = servers
   .query()
-  .where(e => e.data.type === 'primary')
+  .where(({ data }) => data.type === 'primary')
   .select(Selectors.first);
 
 if (!server) {
   server = servers
     .query()
-    .where(e => e.data.type === 'secondary')
+    .where(({ data }) => data.type === 'secondary')
     .select(Selectors.random);
 }
 ```
@@ -196,8 +196,8 @@ if (!server) {
 // Distribute based on server capacity
 const server = servers
   .query()
-  .where(e => e.meta.available)
-  .select(Selectors.weighted(e => e.data.capacity));
+  .where(({ meta }) => meta.available)
+  .select(Selectors.weighted(({ data }) => data.capacity));
 ```
 
 ### Round-Robin (with metadata)

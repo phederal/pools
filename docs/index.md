@@ -41,11 +41,19 @@ proxies.add({ ip: '1.1.1.1', country: 'US', speed: 100 }, { usedCount: 0, active
 
 // Query with filters and sorting
 const bestProxy = proxies
+<<<<<<< HEAD
 	.query()
 	.where((e) => e.data.country === 'US')
 	.where((e) => e.meta.active === true)
 	.sortBy('speed', 'desc')
 	.select(Selectors.first);
+=======
+  .query()
+  .where(({ data }) => data.country === 'US')
+  .where(({ meta }) => meta.active === true)
+  .sortBy('speed', 'desc')
+  .select(Selectors.first);
+>>>>>>> 17c580e (refactor: apply destructuring in predicates for improved readability)
 
 console.log(bestProxy); // { ip: '1.1.1.1', country: 'US', speed: 100 }
 ```
