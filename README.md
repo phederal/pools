@@ -7,15 +7,17 @@
 **Pools** is a modern TypeScript library that replaces arrays, objects, and Maps with a powerful abstraction for working with collections. Think of it as a smart wrapper around your data that gives you filtering, sorting, metadata tracking, and pool composition out of the box.
 
 ### Not a replacement for:
-- ORMs or databases
-- Processing millions of records
-- Enterprise frameworks
+
+-   ORMs or databases
+-   Processing millions of records
+-   Enterprise frameworks
 
 ### Perfect for:
-- Daily work with collections in memory
-- Managing pools of resources (proxies, accounts, sessions)
-- Quick prototyping with typed data
-- Building tools that need smart data selection
+
+-   Daily work with collections in memory
+-   Managing pools of resources (proxies, accounts, sessions)
+-   Quick prototyping with typed data
+-   Building tools that need smart data selection
 
 ## Installation
 
@@ -29,26 +31,23 @@ bun install
 import { Pool, Selectors } from './src';
 
 interface Proxy {
-  ip: string;
-  country: string;
-  speed: number;
+	ip: string;
+	country: string;
+	speed: number;
 }
 
 const proxies = new Pool<Proxy>();
 
 // Add data with metadata
-proxies.add(
-  { ip: '1.1.1.1', country: 'US', speed: 100 },
-  { usedCount: 0, active: true }
-);
+proxies.add({ ip: '1.1.1.1', country: 'US', speed: 100 }, { usedCount: 0, active: true });
 
 // Query with filters and sorting
 const bestProxy = proxies
-  .query()
-  .where(e => e.data.country === 'US')
-  .where(e => e.meta.active === true)
-  .sortBy('speed', 'desc')
-  .select(Selectors.first);
+	.query()
+	.where((e) => e.data.country === 'US')
+	.where((e) => e.meta.active === true)
+	.sortBy('speed', 'desc')
+	.select(Selectors.first);
 
 console.log(bestProxy); // { ip: '1.1.1.1', country: 'US', speed: 100 }
 
@@ -68,8 +67,8 @@ Every item in a pool is wrapped in a `PoolEntry`:
 
 ```typescript
 type PoolEntry<T> = {
-  data: T;              // Your data
-  meta: Record<string, any>; // Metadata (usage stats, flags, etc.)
+	data: T; // Your data
+	meta: Record<string, any>; // Metadata (usage stats, flags, etc.)
 };
 ```
 
@@ -92,11 +91,11 @@ A function that picks one entry from filtered results:
 type Selector<T> = (entries: PoolEntry<T>[]) => PoolEntry<T> | null;
 
 // Built-in selectors
-Selectors.first    // First entry
-Selectors.last     // Last entry
-Selectors.random   // Random entry
-Selectors.minBy('field')  // Entry with minimum value
-Selectors.weighted(fn)    // Weighted random
+Selectors.first; // First entry
+Selectors.last; // Last entry
+Selectors.random; // Random entry
+Selectors.minBy('field'); // Entry with minimum value
+Selectors.weighted(fn); // Weighted random
 ```
 
 ## API Reference
@@ -118,9 +117,9 @@ poolOfPools.add(ukProxies);
 
 // Query pools from pool of pools
 const bestPool = poolOfPools
-  .query()
-  .where(e => e.data.size > 10)
-  .select(Selectors.first);
+	.query()
+	.where((e) => e.data.size > 10)
+	.select(Selectors.first);
 ```
 
 #### CRUD Operations
@@ -131,18 +130,15 @@ pool.add({ ip: '1.1.1.1', country: 'US', speed: 100 }, { usedCount: 0 });
 
 // Add batch
 pool.addBatch([
-  { data: { ip: '2.2.2.2', country: 'UK', speed: 200 }, meta: {} },
-  { data: { ip: '3.3.3.3', country: 'DE', speed: 150 }, meta: {} }
+	{ data: { ip: '2.2.2.2', country: 'UK', speed: 200 }, meta: {} },
+	{ data: { ip: '3.3.3.3', country: 'DE', speed: 150 }, meta: {} },
 ]);
 
 // Remove entries
-pool.remove(data => data.country === 'UK');
+pool.remove((data) => data.country === 'UK');
 
 // Remove batch
-pool.removeBatch([
-  data => data.country === 'UK',
-  data => data.speed < 100
-]);
+pool.removeBatch([(data) => data.country === 'UK', (data) => data.speed < 100]);
 ```
 
 #### Map-like Operations
@@ -152,11 +148,11 @@ pool.removeBatch([
 const proxy = pool.get('ip', '1.1.1.1');
 
 // Get by predicate
-const fastProxy = pool.get(e => e.data.speed > 200);
+const fastProxy = pool.get((e) => e.data.speed > 200);
 
 // Check existence (like Map.has)
 const exists = pool.has('ip', '1.1.1.1');
-const hasFast = pool.has(e => e.data.speed > 200);
+const hasFast = pool.has((e) => e.data.speed > 200);
 
 // Set (update or add)
 pool.set('ip', '1.1.1.1', { ip: '1.1.1.1', country: 'US', speed: 150 });
@@ -170,22 +166,25 @@ const deleted = pool.delete('ip', '1.1.1.1'); // returns boolean
 ```typescript
 // Build queries with chaining
 const result = pool
-  .query()
-  .where(e => e.data.country === 'US')
-  .where(e => e.meta.active === true)
-  .sortBy('speed', 'desc')
-  .sortByMeta('usedCount', 'asc')
-  .take(10)
-  .toArray();
+	.query()
+	.where((e) => e.data.country === 'US')
+	.where((e) => e.meta.active === true)
+	.sortBy('speed', 'desc')
+	.sortByMeta('usedCount', 'asc')
+	.take(10)
+	.toArray();
 
 // Select single entry
 const proxy = pool
-  .query()
-  .where(e => e.data.country === 'US')
-  .select(Selectors.random);
+	.query()
+	.where((e) => e.data.country === 'US')
+	.select(Selectors.random);
 
 // Convert query to pool
-const usProxies = pool.query().where(e => e.data.country === 'US').toPool();
+const usProxies = pool
+	.query()
+	.where((e) => e.data.country === 'US')
+	.toPool();
 ```
 
 #### Events
@@ -193,13 +192,13 @@ const usProxies = pool.query().where(e => e.data.country === 'US').toPool();
 ```typescript
 // Auto-update metadata on use
 pool.on('get', (entry) => {
-  entry.meta.usedCount++;
-  entry.meta.lastUsed = new Date();
+	entry.meta.usedCount++;
+	entry.meta.lastUsed = new Date();
 });
 
 // Logging
 pool.on('add', (entry) => {
-  console.log(`Added: ${entry.data.ip}`);
+	console.log(`Added: ${entry.data.ip}`);
 });
 
 // Available events:
@@ -221,7 +220,7 @@ pool1.merge(pool2);
 pool1.mergeUnique(pool2, 'ip');
 
 // Merge unique by function
-pool1.mergeUnique(pool2, p => `${p.ip}:${p.provider}`);
+pool1.mergeUnique(pool2, (p) => `${p.ip}:${p.provider}`);
 
 // Union (no duplicates)
 pool1.union(pool2, (a, b) => a.ip === b.ip);
@@ -243,7 +242,7 @@ pool.deduplicate('ip');
 const backup = pool.clone();
 
 // Partition into two pools
-const [active, inactive] = pool.partition(e => e.meta.active === true);
+const [active, inactive] = pool.partition((e) => e.meta.active === true);
 
 // Random sample
 const sample = pool.sample(10);
@@ -256,7 +255,7 @@ const byCountry = pool.groupBy('country');
 // Map<string, Pool<Proxy>>
 
 // Group by function
-const bySpeed = pool.groupBy(p => p.speed > 200 ? 'fast' : 'slow');
+const bySpeed = pool.groupBy((p) => (p.speed > 200 ? 'fast' : 'slow'));
 ```
 
 #### Static Methods
@@ -269,11 +268,7 @@ const merged = Pool.merge(pool1, pool2, pool3);
 const unique = Pool.mergeUnique([pool1, pool2], 'ip');
 
 // Merge with conflict resolution
-const best = Pool.mergeUniqueWith(
-  [pool1, pool2],
-  'ip',
-  (existing, duplicate) => existing.data.speed > duplicate.data.speed ? existing : duplicate
-);
+const best = Pool.mergeUniqueWith([pool1, pool2], 'ip', (existing, duplicate) => (existing.data.speed > duplicate.data.speed ? existing : duplicate));
 
 // Intersect two pools
 const common = Pool.intersect(pool1, pool2, (a, b) => a.provider === b.provider);
@@ -285,9 +280,9 @@ const groups = Pool.groupBy([pool1, pool2, pool3], 'country');
 #### Properties
 
 ```typescript
-pool.size           // Number of entries
-pool.all            // Array of data objects
-pool.allEntries     // Array of PoolEntry objects
+pool.size; // Number of entries
+pool.all; // Array of data objects
+pool.allEntries; // Array of PoolEntry objects
 ```
 
 #### Method Wrapping
@@ -295,61 +290,58 @@ pool.allEntries     // Array of PoolEntry objects
 ```typescript
 // Wrap methods to add custom behavior
 pool.wrap('add', (original, data, meta) => {
-  console.log('Before add');
-  const result = original(data, meta);
-  console.log('After add');
-  return result;
+	console.log('Before add');
+	const result = original(data, meta);
+	console.log('After add');
+	return result;
 });
 
 // Example: Database sync
 pool.wrap('add', async (original, data, meta) => {
-  const entry = original(data, meta);
-  await db.insert('proxies', { data, meta });
-  return entry;
+	const entry = original(data, meta);
+	await db.insert('proxies', { data, meta });
+	return entry;
 });
 ```
 
-### PoolQuery<T>
+### Query<T>
 
 ```typescript
 const query = pool.query();
 
 // Filtering
-query.where(e => e.data.country === 'US')
-query.whereOr([
-  e => e.data.provider === 'A',
-  e => e.data.provider === 'B'
-])
+query.where((e) => e.data.country === 'US');
+query.whereOr([(e) => e.data.provider === 'A', (e) => e.data.provider === 'B']);
 
 // Sorting (chainable)
-query.sortBy('speed', 'desc')
-query.sortBy((a, b) => a.data.speed - b.data.speed)
-query.sortByMeta('usedCount', 'asc')
+query.sortBy('speed', 'desc');
+query.sortBy((a, b) => a.data.speed - b.data.speed);
+query.sortByMeta('usedCount', 'asc');
 
 // Pagination
-query.offset(20).take(10)
+query.offset(20).take(10);
 
 // Materialization
-query.select(Selectors.first)  // Single entry
-query.toArray()                // Array of data
-query.toPool()                 // Convert query to Pool
-query.count                    // Number of entries
+query.select(Selectors.first); // Single entry
+query.toArray(); // Array of data
+query.toPool(); // Convert query to Pool
+query.count; // Number of entries
 ```
 
-### PoolBinder
+### Binder
 
 Bind multiple pools together for complex selections:
 
 ```typescript
-const combo = new PoolBinder()
-  .bind('proxy', proxies)
-  .bind('account', accounts)
-  .bind('service', services)
-  .where('proxy', e => e.data.country === 'US')
-  .where('account', e => e.data.service === 'twitter')
-  .selectWith('proxy', Selectors.minBy('usedCount'))
-  .selectWith('account', Selectors.random)
-  .execute();
+const combo = new Binder()
+	.bind('proxy', proxies)
+	.bind('account', accounts)
+	.bind('service', services)
+	.where('proxy', (e) => e.data.country === 'US')
+	.where('account', (e) => e.data.service === 'twitter')
+	.selectWith('proxy', Selectors.minBy('usedCount'))
+	.selectWith('account', Selectors.random)
+	.execute();
 
 // Result:
 // {
@@ -367,21 +359,19 @@ const combo = new PoolBinder()
 import { Selectors } from './src';
 
 // Random entry
-pool.query().select(Selectors.random)
+pool.query().select(Selectors.random);
 
 // First entry
-pool.query().select(Selectors.first)
+pool.query().select(Selectors.first);
 
 // Last entry
-pool.query().select(Selectors.last)
+pool.query().select(Selectors.last);
 
 // Minimum by field (checks both data and meta)
-pool.query().select(Selectors.minBy('usedCount'))
+pool.query().select(Selectors.minBy('usedCount'));
 
 // Weighted random (higher weight = higher probability)
-pool.query().select(
-  Selectors.weighted(entry => 1 / (entry.meta.usedCount + 1))
-)
+pool.query().select(Selectors.weighted((entry) => 1 / (entry.meta.usedCount + 1)));
 ```
 
 ## Examples
@@ -403,13 +393,14 @@ bun run examples/proxy-pool.ts
 ```
 
 This example demonstrates:
-- CRUD operations
-- Event handling
-- Complex queries with multiple filters
-- Pool combination
-- Transformations
-- PoolBinder usage
-- Weighted selectors
+
+-   CRUD operations
+-   Event handling
+-   Complex queries with multiple filters
+-   Pool combination
+-   Transformations
+-   Binder usage
+-   Weighted selectors
 
 ### Map-like Usage
 
@@ -420,11 +411,12 @@ bun run examples/map-like.ts
 ```
 
 This example demonstrates:
-- Using Pool as a Map replacement
-- get/has/set/delete operations
-- Pool of pools with identifiers
-- Cache implementation
-- Config management
+
+-   Using Pool as a Map replacement
+-   get/has/set/delete operations
+-   Pool of pools with identifiers
+-   Cache implementation
+-   Config management
 
 ### Game Service
 
@@ -435,12 +427,13 @@ bun run examples/game-service.ts
 ```
 
 Comprehensive example demonstrating ALL library features:
-- Multiple interconnected pools (games, accounts, servers, sessions)
-- Complex matchmaking logic
-- Event-driven architecture
-- Pool of pools for regional organization
-- Weighted server selection
-- Statistics and analytics
+
+-   Multiple interconnected pools (games, accounts, servers, sessions)
+-   Complex matchmaking logic
+-   Event-driven architecture
+-   Pool of pools for regional organization
+-   Weighted server selection
+-   Statistics and analytics
 
 ## Use Cases
 
@@ -450,18 +443,18 @@ Comprehensive example demonstrating ALL library features:
 const proxies = new Pool<Proxy>();
 
 // Auto-track usage
-proxies.on('get', entry => {
-  entry.meta.usedCount++;
-  entry.meta.lastUsed = new Date();
+proxies.on('get', (entry) => {
+	entry.meta.usedCount++;
+	entry.meta.lastUsed = new Date();
 });
 
 // Get least-used US proxy
 const proxy = proxies
-  .query()
-  .where(e => e.data.country === 'US')
-  .where(e => e.meta.active)
-  .sortByMeta('usedCount', 'asc')
-  .select(Selectors.first);
+	.query()
+	.where((e) => e.data.country === 'US')
+	.where((e) => e.meta.active)
+	.sortByMeta('usedCount', 'asc')
+	.select(Selectors.first);
 ```
 
 ### Session Management
@@ -470,35 +463,35 @@ const proxy = proxies
 const sessions = new Pool<Session>();
 
 // Auto-expire old sessions
-sessions.on('get', entry => {
-  if (Date.now() - entry.meta.lastUsed > 3600000) {
-    entry.meta.expired = true;
-  }
+sessions.on('get', (entry) => {
+	if (Date.now() - entry.meta.lastUsed > 3600000) {
+		entry.meta.expired = true;
+	}
 });
 
 // Get valid session
 const session = sessions
-  .query()
-  .where(e => !e.meta.expired)
-  .select(Selectors.random);
+	.query()
+	.where((e) => !e.meta.expired)
+	.select(Selectors.random);
 ```
 
 ### Resource Allocation
 
 ```typescript
 // Bind proxy + account + service
-const resources = new PoolBinder()
-  .bind('proxy', proxies)
-  .bind('account', accounts)
-  .bind('service', services)
-  .where('proxy', e => e.meta.usedCount < 10)
-  .where('account', e => !e.meta.banned)
-  .selectWith('proxy', Selectors.minBy('usedCount'))
-  .selectWith('account', Selectors.random)
-  .execute();
+const resources = new Binder()
+	.bind('proxy', proxies)
+	.bind('account', accounts)
+	.bind('service', services)
+	.where('proxy', (e) => e.meta.usedCount < 10)
+	.where('account', (e) => !e.meta.banned)
+	.selectWith('proxy', Selectors.minBy('usedCount'))
+	.selectWith('account', Selectors.random)
+	.execute();
 
 if (resources) {
-  await doTask(resources.proxy, resources.account, resources.service);
+	await doTask(resources.proxy, resources.account, resources.service);
 }
 ```
 
@@ -508,8 +501,8 @@ Full TypeScript support with generic types:
 
 ```typescript
 interface MyData {
-  id: number;
-  name: string;
+	id: number;
+	name: string;
 }
 
 const pool = new Pool<MyData>();
@@ -526,9 +519,10 @@ result?.invalid; // ✗ TypeScript error
 ## Performance
 
 Pools is designed for collections of hundreds to thousands of items. For very large datasets (100k+ items), consider:
-- Using pagination with `offset()` and `take()`
-- Filtering early to reduce the working set
-- Using `query.toPool()` to cache filtered results
+
+-   Using pagination with `offset()` and `take()`
+-   Filtering early to reduce the working set
+-   Using `query.toPool()` to cache filtered results
 
 ## Project Structure
 
@@ -537,8 +531,8 @@ pools/
 ├── src/
 │   ├── types.ts       # Core types
 │   ├── Pool.ts        # Main Pool class
-│   ├── PoolQuery.ts   # Query builder
-│   ├── PoolBinder.ts  # Multi-pool binding
+│   ├── Query.ts   # Query builder
+│   ├── Binder.ts  # Multi-pool binding
 │   ├── Selectors.ts   # Built-in selectors
 │   └── index.ts       # Public API
 ├── examples/

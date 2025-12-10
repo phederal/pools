@@ -15,7 +15,7 @@ bun run examples/basic.ts
 ## Code
 
 ```typescript
-import { Pool, Selectors, PoolBinder } from '../src';
+import { Pool, Selectors, Binder } from '../src';
 
 // Create a pool of proxies
 interface Proxy {
@@ -98,7 +98,7 @@ Listen to pool operations.
 ### Pool Binding
 
 ```typescript
-const combo = new PoolBinder()
+const combo = new Binder()
 	.bind('proxy', proxies)
 	.bind('account', accounts)
 	.where('proxy', (e) => e.data.country === 'US')
@@ -139,7 +139,7 @@ Best US proxy (low usage, high speed): { ip: '3.3.3.3', country: 'US', speed: 15
 [Event] Proxy 1.1.1.1 used, count: 1
 [Event] Proxy 3.3.3.3 used, count: 3
 
-=== PoolBinder Example ===
+=== Binder Example ===
 
 Combo result: {
   proxy: { ip: '1.1.1.1', country: 'US', speed: 100 },

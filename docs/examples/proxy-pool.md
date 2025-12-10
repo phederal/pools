@@ -20,6 +20,6 @@ bun run examples/proxy-pool.ts
 -   Pool combination and deduplication
 -   Transformations (partition, groupBy, sample)
 -   Weighted selectors
--   PoolBinder for resource allocation
+-   Binder for resource allocation
 
 See the [source code](https://github.com/phederal/pools/blob/main/examples/proxy-pool.ts) for the complete implementation.

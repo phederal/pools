@@ -306,7 +306,10 @@ function joinGame(accountId: string, gameId: string, preferredRegion: string = '
 	console.log(`\nPlayer joining: account=${accountId}, game=${gameId}, region=${preferredRegion}`);
 
 	// Проверка аутентификации
-	const authSession = authSessions.query().where((e) => e.data.accountId === accountId).select(Selectors.first);
+	const authSession = authSessions
+		.query()
+		.where((e) => e.data.accountId === accountId)
+		.select(Selectors.first);
 
 	if (!authSession) {
 		console.log('  ❌ Not authenticated');
@@ -314,7 +317,10 @@ function joinGame(accountId: string, gameId: string, preferredRegion: string = '
 	}
 
 	// Проверка аккаунта
-	const account = accounts.query().where((e) => e.data.id === accountId).select(Selectors.first);
+	const account = accounts
+		.query()
+		.where((e) => e.data.id === accountId)
+		.select(Selectors.first);
 
 	if (!account) {
 		console.log('  ❌ Account not found');
@@ -328,7 +334,10 @@ function joinGame(accountId: string, gameId: string, preferredRegion: string = '
 	}
 
 	// Проверка игры
-	const game = games.query().where((e) => e.data.id === gameId).select(Selectors.first);
+	const game = games
+		.query()
+		.where((e) => e.data.id === gameId)
+		.select(Selectors.first);
 
 	if (!game) {
 		console.log('  ❌ Game not found');
@@ -382,7 +391,7 @@ joinGame('acc4', 'game3', 'EU-West');
 
 console.log(`\nTotal active player sessions: ${playerSessions.size}`);
 
-// ========== СЦЕНАРИЙ 7: ИСПОЛЬЗОВАНИЕ POOLBINDER ==========
+// ========== СЦЕНАРИЙ 7: ИСПОЛЬЗОВАНИЕ Binder ==========
 
 console.log('\n🔗 === SCENARIO 7: Complex Matchmaking with Binder ===\n');
 
@@ -460,11 +469,20 @@ console.log(`Active auth sessions: ${authSessions.size}`);
 console.log('\n🏊 === SCENARIO 10: Pool of Pools - Regional Organization ===\n');
 
 // Создаем пулы серверов по регионам
-const euWestServers = gameServers.query().where((e) => e.data.region === 'EU-West').toPool();
+const euWestServers = gameServers
+	.query()
+	.where((e) => e.data.region === 'EU-West')
+	.toPool();
 
-const euEastServers = gameServers.query().where((e) => e.data.region === 'EU-East').toPool();
+const euEastServers = gameServers
+	.query()
+	.where((e) => e.data.region === 'EU-East')
+	.toPool();
 
-const usServers = gameServers.query().where((e) => e.data.region.startsWith('US')).toPool();
+const usServers = gameServers
+	.query()
+	.where((e) => e.data.region.startsWith('US'))
+	.toPool();
 
 // Создаем пул пулов
 const regionalServerPools = new Pool<Pool<GameServer>>();
@@ -550,9 +568,15 @@ accounts.union(unionTest, (a, b) => a.id === b.id);
 console.log(`Union operation: ${accounts.size - originalSize} new accounts added`);
 
 // Intersect
-const premiumPool1 = accounts.query().where((e) => e.data.premium === true).toPool();
+const premiumPool1 = accounts
+	.query()
+	.where((e) => e.data.premium === true)
+	.toPool();
 
-const highLevelPool = accounts.query().where((e) => e.data.level >= 50).toPool();
+const highLevelPool = accounts
+	.query()
+	.where((e) => e.data.level >= 50)
+	.toPool();
 
 const elitePool = Pool.intersect(premiumPool1, highLevelPool, (a, b) => a.id === b.id);
 console.log(`Elite players (premium AND high level): ${elitePool.size}`);
@@ -627,9 +651,7 @@ const selectedServer = gameServers
 			const uptimeFactor = entry.meta.uptime / 100; // Предпочитаем высокий аптайм
 
 			const weight = loadFactor * 40 + pingFactor * 100 + uptimeFactor * 20;
-			console.log(
-				`  ${entry.data.id} (${entry.data.region}): load=${loadFactor.toFixed(2)}, ping=${pingFactor.toFixed(3)}, uptime=${uptimeFactor.toFixed(2)} => weight=${weight.toFixed(2)}`
-			);
+			console.log(`  ${entry.data.id} (${entry.data.region}): load=${loadFactor.toFixed(2)}, ping=${pingFactor.toFixed(3)}, uptime=${uptimeFactor.toFixed(2)} => weight=${weight.toFixed(2)}`);
 
 			return weight;
 		})

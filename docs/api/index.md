@@ -4,18 +4,18 @@ Complete API documentation for the Pools library.
 
 ## Core Classes
 
-- [Pool](/api/pool) - Main class for managing data collections
-- [PoolQuery](/api/query) - Query builder for filtering and sorting
-- [PoolBinder](/api/binder) - Bind multiple pools together
-- [Selectors](/api/selectors) - Built-in selection strategies
+-   [Pool](/api/pool) - Main class for managing data collections
+-   [Query](/api/query) - Query builder for filtering and sorting
+-   [Binder](/api/binder) - Bind multiple pools together
+-   [Selectors](/api/selectors) - Built-in selection strategies
 
 ## Types
 
 ```typescript
 // Entry wrapper
 type PoolEntry<T> = {
-  data: T;
-  meta: Record<string, any>;
+	data: T;
+	meta: Record<string, any>;
 };
 
 // Filter function
@@ -27,9 +27,9 @@ type Selector<T> = (entries: PoolEntry<T>[]) => PoolEntry<T> | null;
 
 ## Quick Navigation
 
-| Class | Description |
-|-------|-------------|
-| [Pool](/api/pool) | Main pool class with CRUD, Map-like operations, and events |
-| [PoolQuery](/api/query) | Chainable query API for filtering and sorting |
-| [PoolBinder](/api/binder) | Combine multiple pools for complex selections |
-| [Selectors](/api/selectors) | Built-in selectors: first, last, random, minBy, weighted |
+| Class                       | Description                                                |
+| --------------------------- | ---------------------------------------------------------- |
+| [Pool](/api/pool)           | Main pool class with CRUD, Map-like operations, and events |
+| [Query](/api/query)         | Chainable query API for filtering and sorting              |
+| [Binder](/api/binder)       | Combine multiple pools for complex selections              |
+| [Selectors](/api/selectors) | Built-in selectors: first, last, random, minBy, weighted   |

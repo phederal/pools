@@ -124,12 +124,12 @@ users.delete('id', '1');
 Combine multiple pools for complex selections:
 
 ```typescript
-import { PoolBinder } from 'pools';
+import { Binder } from 'pools';
 
 const proxies = new Pool<Proxy>();
 const accounts = new Pool<Account>();
 
-const combo = new PoolBinder()
+const combo = new Binder()
 	.bind('proxy', proxies)
 	.bind('account', accounts)
 	.where('proxy', (e) => e.data.country === 'US')
