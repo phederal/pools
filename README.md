@@ -171,7 +171,7 @@ const result = pool
 	.where((e) => e.meta.active === true)
 	.sortBy('speed', 'desc')
 	.sortByMeta('usedCount', 'asc')
-	.take(10)
+	.limit(10)
 	.toArray();
 
 // Select single entry
@@ -319,7 +319,7 @@ query.sortBy((a, b) => a.data.speed - b.data.speed);
 query.sortByMeta('usedCount', 'asc');
 
 // Pagination
-query.offset(20).take(10);
+query.offset(20).limit(10);
 
 // Materialization
 query.select(Selectors.first); // Single entry
@@ -520,7 +520,7 @@ result?.invalid; // ✗ TypeScript error
 
 Pools is designed for collections of hundreds to thousands of items. For very large datasets (100k+ items), consider:
 
--   Using pagination with `offset()` and `take()`
+-   Using pagination with `offset()` and `limit()`
 -   Filtering early to reduce the working set
 -   Using `query.toPool()` to cache filtered results
 

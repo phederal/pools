@@ -32,10 +32,7 @@ const services = new Pool<Service>();
 // ========== ДОБАВЛЕНИЕ ДАННЫХ ==========
 
 // Одиночное добавление
-proxies.add(
-	{ ip: '1.1.1.1', country: 'US', speed: 100, provider: 'ProviderA' },
-	{ usedCount: 0, lastUsed: null, active: true }
-);
+proxies.add({ ip: '1.1.1.1', country: 'US', speed: 100, provider: 'ProviderA' }, { usedCount: 0, lastUsed: null, active: true });
 
 // Batch добавление
 proxies.addBatch([
@@ -57,16 +54,9 @@ proxies.addBatch([
 	},
 ]);
 
-accounts.addBatch([
-	{ data: { username: 'user1', password: 'pass1', service: 'twitter' } },
-	{ data: { username: 'user2', password: 'pass2', service: 'facebook' } },
-	{ data: { username: 'user3', password: 'pass3', service: 'twitter' } },
-]);
+accounts.addBatch([{ data: { username: 'user1', password: 'pass1', service: 'twitter' } }, { data: { username: 'user2', password: 'pass2', service: 'facebook' } }, { data: { username: 'user3', password: 'pass3', service: 'twitter' } }]);
 
-services.addBatch([
-	{ data: { name: 'API', url: 'https://api.twitter.com' } },
-	{ data: { name: 'Web', url: 'https://twitter.com' } },
-]);
+services.addBatch([{ data: { name: 'API', url: 'https://api.twitter.com' } }, { data: { name: 'Web', url: 'https://twitter.com' } }]);
 
 console.log(`Total proxies: ${proxies.size}`);
 console.log(`Total accounts: ${accounts.size}`);
@@ -119,7 +109,7 @@ const page1Proxies = proxies
 	.query()
 	.where((e) => e.meta.active)
 	.sortBy('speed', 'desc')
-	.take(2)
+	.limit(2)
 	.toArray();
 
 console.log('Top 2 active proxies by speed:', page1Proxies);
@@ -129,7 +119,7 @@ const page2Proxies = proxies
 	.where((e) => e.meta.active)
 	.sortBy('speed', 'desc')
 	.offset(2)
-	.take(2)
+	.limit(2)
 	.toArray();
 
 console.log('Next 2 active proxies:', page2Proxies);
@@ -153,7 +143,10 @@ euProxies.add({ ip: '30.0.0.1', country: 'DE', speed: 300, provider: 'P3' });
 // Merge уникальных по IP
 const allProxies = Pool.mergeUnique([usProxies, ukProxies, euProxies], 'ip');
 console.log(`Total unique proxies by IP: ${allProxies.size}`);
-console.log('IPs:', allProxies.all.map((p) => p.ip));
+console.log(
+	'IPs:',
+	allProxies.all.map((p) => p.ip)
+);
 
 // Merge с приоритетом по скорости (оставляем самый быстрый)
 const pool1 = new Pool<Proxy>();
@@ -162,9 +155,7 @@ const pool2 = new Pool<Proxy>();
 pool1.add({ ip: '1.1.1.1', country: 'US', speed: 100, provider: 'P1' });
 pool2.add({ ip: '1.1.1.1', country: 'US', speed: 200, provider: 'P2' });
 
-const bestProxies = Pool.mergeUniqueWith([pool1, pool2], 'ip', (existing, duplicate) =>
-	existing.data.speed > duplicate.data.speed ? existing : duplicate
-);
+const bestProxies = Pool.mergeUniqueWith([pool1, pool2], 'ip', (existing, duplicate) => (existing.data.speed > duplicate.data.speed ? existing : duplicate));
 
 console.log('\nMerged with speed priority (keeping fastest):');
 const result = bestProxies.query().select(Selectors.first);
@@ -237,7 +228,7 @@ poolsByCountry.forEach((pool, country) => {
 		.query()
 		.where((e) => e.meta.active)
 		.sortBy('speed', 'desc')
-		.take(2)
+		.limit(2)
 		.toPool();
 
 	topPools.set(country, top2);

@@ -10,7 +10,7 @@ export class Query<T> {
 	private filters: Filter<T>[] = [];
 	private sorters: Array<(a: PoolEntry<T>, b: PoolEntry<T>) => number> = [];
 	private offsetCount: number = 0;
-	private takeCount: number = Infinity;
+	private limitCount: number = Infinity;
 
 	constructor(entries: PoolEntry<T>[]) {
 		this.entries = entries;
@@ -98,8 +98,8 @@ export class Query<T> {
 	 * @param count - Number of entries to take
 	 * @returns This query instance for chaining
 	 */
-	take(count: number): this {
-		this.takeCount = count;
+	limit(count: number): this {
+		this.limitCount = count;
 		return this;
 	}
 
@@ -126,8 +126,8 @@ export class Query<T> {
 		}
 
 		// Apply pagination
-		if (this.offsetCount > 0 || this.takeCount !== Infinity) {
-			result = result.slice(this.offsetCount, this.offsetCount + this.takeCount);
+		if (this.offsetCount > 0 || this.limitCount !== Infinity) {
+			result = result.slice(this.offsetCount, this.offsetCount + this.limitCount);
 		}
 
 		return result;

@@ -591,7 +591,7 @@ accounts
 	.where((e) => !e.meta.banned)
 	.sortBy('level', 'desc')
 	.sortBy('reputation', 'desc') // Вторичная сортировка
-	.take(10)
+	.limit(10)
 	.toArray()
 	.forEach((acc, index) => {
 		console.log(`  ${index + 1}. ${acc.username} - Level ${acc.level} (Rep: ${acc.reputation})`);
@@ -603,7 +603,7 @@ accounts
 	.where((e) => !e.meta.banned)
 	.sortBy('level', 'desc')
 	.offset(10)
-	.take(5)
+	.limit(5)
 	.toArray()
 	.forEach((acc, index) => {
 		console.log(`  ${index + 11}. ${acc.username} - Level ${acc.level}`);

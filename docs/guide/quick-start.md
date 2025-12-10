@@ -89,7 +89,7 @@ const result = users
 	// Sort by name
 	.sortBy('name', 'asc')
 	// Get first 10
-	.take(10)
+	.limit(10)
 	// Convert to array
 	.toArray();
 ```

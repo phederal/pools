@@ -91,17 +91,17 @@ pool.query().sortByMeta('usedCount', 'asc');
 
 ## Pagination
 
-### take()
+### limit()
 
 Limits the number of results.
 
 ```typescript
-query.take(count: number): Query<T>
+query.limit(count: number): Query<T>
 ```
 
 **Example:**
 ```typescript
-pool.query().take(10).toArray(); // Get first 10
+pool.query().limit(10).toArray(); // Get first 10
 ```
 
 ### offset()
@@ -114,7 +114,7 @@ query.offset(count: number): Query<T>
 
 **Example:**
 ```typescript
-pool.query().offset(20).take(10).toArray(); // Get 10 items starting from 20
+pool.query().offset(20).limit(10).toArray(); // Get 10 items starting from 20
 ```
 
 ## Materialization
@@ -207,7 +207,7 @@ const result = pool
   // Skip first 10
   .offset(10)
   // Take next 5
-  .take(5)
+  .limit(5)
   // Get as array
   .toArray();
 ```

@@ -108,8 +108,8 @@ describe('Query', () => {
 	});
 
 	describe('Pagination', () => {
-		test('take() should limit results', () => {
-			const result = pool.query().take(3).toArray();
+		test('limit() should limit results', () => {
+			const result = pool.query().limit(3).toArray();
 
 			expect(result.length).toBe(3);
 		});
@@ -120,16 +120,16 @@ describe('Query', () => {
 			expect(result.length).toBe(3);
 		});
 
-		test('offset() and take() should work together', () => {
-			const result = pool.query().offset(1).take(2).toArray();
+		test('offset() and limit() should work together', () => {
+			const result = pool.query().offset(1).limit(2).toArray();
 
 			expect(result.length).toBe(2);
 			expect(result[0]?.id).toBe('2');
 			expect(result[1]?.id).toBe('3');
 		});
 
-		test('take() more than available should return all', () => {
-			const result = pool.query().take(100).toArray();
+		test('limit() more than available should return all', () => {
+			const result = pool.query().limit(100).toArray();
 
 			expect(result.length).toBe(5);
 		});
@@ -213,7 +213,7 @@ describe('Query', () => {
 				.query()
 				.where((e) => e.meta.active === true)
 				.sortBy('value', 'desc')
-				.take(2)
+				.limit(2)
 				.toArray();
 
 			expect(result.length).toBe(2);
@@ -229,7 +229,7 @@ describe('Query', () => {
 				.sortBy('value', 'asc')
 				.sortByMeta('priority', 'desc')
 				.offset(1)
-				.take(2)
+				.limit(2)
 				.toArray();
 
 			expect(result.length).toBe(2);
