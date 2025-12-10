@@ -31,15 +31,9 @@ users.add({ id: '2', name: 'Bob', email: 'bob@example.com', age: 30 }, { active:
 
 // 4. Query data
 const activeUser = users
-<<<<<<< HEAD
 	.query()
-	.where((e) => e.meta.active === true)
+	.where(({ meta }) => meta.active === true)
 	.select(Selectors.first);
-=======
-  .query()
-  .where(({ meta }) => meta.active === true)
-  .select(Selectors.first);
->>>>>>> 17c580e (refactor: apply destructuring in predicates for improved readability)
 
 console.log(activeUser); // Alice
 ```
@@ -87,31 +81,17 @@ Chain filters, sorting, and pagination:
 
 ```typescript
 const result = users
-<<<<<<< HEAD
 	.query()
 	// Filter by age
-	.where((e) => e.data.age >= 18)
+	.where(({ data }) => data.age >= 18)
 	// Filter by active status
-	.where((e) => e.meta.active === true)
+	.where(({ meta }) => meta.active === true)
 	// Sort by name
 	.sortBy('name', 'asc')
 	// Get first 10
 	.take(10)
 	// Convert to array
 	.toArray();
-=======
-  .query()
-  // Filter by age
-  .where(({ data }) => data.age >= 18)
-  // Filter by active status
-  .where(({ meta }) => meta.active === true)
-  // Sort by name
-  .sortBy('name', 'asc')
-  // Get first 10
-  .take(10)
-  // Convert to array
-  .toArray();
->>>>>>> 17c580e (refactor: apply destructuring in predicates for improved readability)
 ```
 
 ## Map-like Operations
@@ -149,25 +129,14 @@ import { Binder } from 'pools';
 const proxies = new Pool<Proxy>();
 const accounts = new Pool<Account>();
 
-<<<<<<< HEAD
-const combo = new Binder()
+const combo = new PoolBinder()
 	.bind('proxy', proxies)
 	.bind('account', accounts)
-	.where('proxy', (e) => e.data.country === 'US')
-	.where('account', (e) => e.data.service === 'twitter')
+	.where('proxy', ({ data }) => data.country === 'US')
+	.where('account', ({ data }) => data.service === 'twitter')
 	.selectWith('proxy', Selectors.minBy('usedCount'))
 	.selectWith('account', Selectors.random)
 	.execute();
-=======
-const combo = new PoolBinder()
-  .bind('proxy', proxies)
-  .bind('account', accounts)
-  .where('proxy', ({ data }) => data.country === 'US')
-  .where('account', ({ data }) => data.service === 'twitter')
-  .selectWith('proxy', Selectors.minBy('usedCount'))
-  .selectWith('account', Selectors.random)
-  .execute();
->>>>>>> 17c580e (refactor: apply destructuring in predicates for improved readability)
 
 if (combo) {
 	await doTask(combo.proxy, combo.account);
