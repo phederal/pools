@@ -39,7 +39,7 @@ pool.partition(predicate: (entry: PoolEntry<T>) => boolean): [Pool<T>, Pool<T>]
 
 **Example:**
 ```typescript
-const [premium, free] = users.partition(e => e.data.premium === true);
+const [premium, free] = users.partition(({ data }) => data.premium === true);
 
 console.log(`Premium: ${premium.size}, Free: ${free.size}`);
 ```

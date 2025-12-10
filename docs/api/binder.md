@@ -41,8 +41,8 @@ binder.where<T>(poolName: string, filter: Filter<T>): Binder
 **Example:**
 ```typescript
 binder
-  .where('proxy', e => e.data.country === 'US')
-  .where('account', e => e.data.service === 'twitter');
+  .where('proxy', ({ data }) => data.country === 'US')
+  .where('account', ({ data }) => data.service === 'twitter');
 ```
 
 ### selectWith()
@@ -104,9 +104,9 @@ const combo = new Binder()
   .bind('account', accounts)
   .bind('service', services)
   // Filter each pool
-  .where('proxy', e => e.data.country === 'US')
-  .where('account', e => e.data.service === 'twitter')
-  .where('service', e => e.data.name === 'API')
+  .where('proxy', ({ data }) => data.country === 'US')
+  .where('account', ({ data }) => data.service === 'twitter')
+  .where('service', ({ data }) => data.name === 'API')
   // Select from each pool
   .selectWith('proxy', Selectors.minBy('usedCount'))
   .selectWith('account', Selectors.random)
@@ -130,7 +130,7 @@ Allocate multiple resources for a task:
 const resources = new Binder()
   .bind('proxy', proxies)
   .bind('account', accounts)
-  .where('proxy', e => e.meta.usedCount < 10)
+  .where('proxy', ({ meta }) => meta.usedCount < 10)
   .where('account', e => !e.meta.banned)
   .selectWith('proxy', Selectors.minBy('usedCount'))
   .selectWith('account', Selectors.weighted(e => 1 / (e.meta.failCount + 1)))
@@ -145,7 +145,7 @@ Select a server and session together:
 const combo = new Binder()
   .bind('server', servers)
   .bind('session', sessions)
-  .where('server', e => e.data.region === 'EU')
+  .where('server', ({ data }) => data.region === 'EU')
   .where('session', e => !e.meta.expired)
   .selectWith('server', Selectors.minBy('load'))
   .selectWith('session', Selectors.random)
@@ -159,7 +159,7 @@ const combo = new Binder()
 const result = new Binder()
   .bind('proxy', proxies)
   .bind('account', accounts)
-  .where('proxy', e => e.data.provider === 'ProviderA')
-  .where('account', e => e.data.provider === 'ProviderB')
+  .where('proxy', ({ data }) => data.provider === 'ProviderA')
+  .where('account', ({ data }) => data.provider === 'ProviderB')
   .execute();
 ```

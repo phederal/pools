@@ -23,8 +23,8 @@ pool.get(predicate: (entry: PoolEntry<T>) => boolean): T | null
 // By field
 const user = pool.get('id', 'user123');
 
-// By predicate
-const admin = pool.get(e => e.data.role === 'admin');
+// By predicate (with destructuring)
+const admin = pool.get(({ data }) => data.role === 'admin');
 ```
 
 ## has()
@@ -49,7 +49,8 @@ if (pool.has('id', 'user123')) {
   console.log('User exists');
 }
 
-if (pool.has(e => e.data.age > 18)) {
+// With destructuring
+if (pool.has(({ data }) => data.age > 18)) {
   console.log('Has adults');
 }
 ```

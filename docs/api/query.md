@@ -6,6 +6,17 @@ Query builder for filtering, sorting, and selecting entries from a pool.
 Create a query using `pool.query()`, then chain methods to build your query.
 :::
 
+::: tip Best Practice - Destructuring
+Use destructuring in predicates for cleaner, more readable code:
+```typescript
+// ✅ Good - with destructuring
+.where(({ data, meta }) => data.country === 'US' && meta.active)
+
+// ❌ Verbose - without destructuring
+.where(e => e.data.country === 'US' && e.meta.active)
+```
+:::
+
 ## Filtering
 
 ### where()
@@ -18,10 +29,11 @@ query.where(filter: Filter<T>): Query<T>
 
 **Example:**
 ```typescript
+// Using destructuring for cleaner syntax
 const result = pool
   .query()
-  .where(e => e.data.country === 'US')
-  .where(e => e.meta.active === true)
+  .where(({ data }) => data.country === 'US')
+  .where(({ meta }) => meta.active === true)
   .toArray();
 ```
 
@@ -38,8 +50,8 @@ query.whereOr(filters: Filter<T>[]): Query<T>
 const result = pool
   .query()
   .whereOr([
-    e => e.data.provider === 'A',
-    e => e.data.provider === 'B'
+    ({ data }) => data.provider === 'A',
+    ({ data }) => data.provider === 'B'
   ])
   .toArray();
 ```

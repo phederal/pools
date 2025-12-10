@@ -35,8 +35,8 @@ pool.map<U>(fn: (entry: PoolEntry<T>, index: number) => U): U[]
 
 **Example:**
 ```typescript
-const names = pool.map(entry => entry.data.name);
-const ips = proxyPool.map(entry => entry.data.ip);
+const names = pool.map(({ data }) => data.name);
+const ips = proxyPool.map(({ data }) => data.ip);
 ```
 
 ## filter()
@@ -54,7 +54,7 @@ pool.filter(fn: (entry: PoolEntry<T>, index: number) => boolean): PoolEntry<T>[]
 
 **Example:**
 ```typescript
-const active = pool.filter(entry => entry.meta.active === true);
+const active = pool.filter(({ meta }) => meta.active === true);
 ```
 
 ## reduce()
@@ -96,7 +96,7 @@ pool.some(fn: (entry: PoolEntry<T>, index: number) => boolean): boolean
 
 **Example:**
 ```typescript
-const hasAdult = pool.some(entry => entry.data.age >= 18);
+const hasAdult = pool.some(({ data }) => data.age >= 18);
 ```
 
 ## every()
@@ -114,7 +114,7 @@ pool.every(fn: (entry: PoolEntry<T>, index: number) => boolean): boolean
 
 **Example:**
 ```typescript
-const allActive = pool.every(entry => entry.meta.active === true);
+const allActive = pool.every(({ meta }) => meta.active === true);
 ```
 
 ## find()
@@ -132,7 +132,7 @@ pool.find(fn: (entry: PoolEntry<T>, index: number) => boolean): PoolEntry<T> | u
 
 **Example:**
 ```typescript
-const admin = pool.find(entry => entry.data.role === 'admin');
+const admin = pool.find(({ data }) => data.role === 'admin');
 ```
 
 ## findIndex()
@@ -150,5 +150,5 @@ pool.findIndex(fn: (entry: PoolEntry<T>, index: number) => boolean): number
 
 **Example:**
 ```typescript
-const index = pool.findIndex(entry => entry.data.id === 'user123');
+const index = pool.findIndex(({ data }) => data.id === 'user123');
 ```
