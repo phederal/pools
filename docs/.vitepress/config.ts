@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
 	title: 'Pools',
 	description: 'Lightweight TypeScript library for managing data collections',
-	base: '/pools/',
+	base: '/',
 	themeConfig: {
 		nav: [
 			{ text: 'Home', link: '/' },
